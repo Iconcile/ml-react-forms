@@ -185,7 +185,6 @@ export var MUIAutocomplete = React.memo(function MUIAutocomplete(props) {
                         return [3 /*break*/, 5];
                     case 4:
                         error_1 = _a.sent();
-                        console.log('error', error_1);
                         queries = filter(queries, function (q) { return q.term !== newTerm; });
                         setDefaultOptions([]);
                         setGlobalQueries(__spreadArray([], queries, true));

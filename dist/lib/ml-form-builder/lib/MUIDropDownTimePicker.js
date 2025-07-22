@@ -49,7 +49,6 @@ export var MUIDropDownTimePicker = function (props) {
         if (event.target.value)
             formikProps.setFieldValue(get(fieldProps, 'name'), event.target.value, false);
     };
-    console.log(value);
     return (React.createElement(FormControl, __assign({}, formControlProps),
         label &&
             (React.createElement(InputLabel, __assign({ id: labelId }, inputLabelProps), label)),

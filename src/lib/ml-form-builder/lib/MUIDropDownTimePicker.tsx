@@ -66,7 +66,7 @@ export const MUIDropDownTimePicker: FC<MUIDropDownTimePickerProps> = (props) => 
         if (event.target.value)
             formikProps.setFieldValue(get(fieldProps, 'name'), event.target.value, false)
     }
-    console.log(value)
+    
     return (
         <FormControl {...formControlProps}
         >

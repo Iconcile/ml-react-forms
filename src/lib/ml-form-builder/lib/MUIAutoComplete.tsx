@@ -139,7 +139,6 @@ export const MUIAutocomplete = React.memo(function MUIAutocomplete<T>(props: IPr
                 }
                 setGlobalQueries([...queries])
             } catch (error) {
-                console.log('error', error)
                 queries = filter(queries, q => q.term !== newTerm);
                 setDefaultOptions([]);
                 setGlobalQueries([...queries])

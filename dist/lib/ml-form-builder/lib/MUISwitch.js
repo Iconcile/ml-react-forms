@@ -30,6 +30,5 @@ export var MUISwitch = function (props) {
     var handleOnChange = function () {
         formikProps.setFieldValue(fieldProps.name, !value);
     };
-    console.log('Switch props', __assign({}, __assign(__assign({}, switchProps), { disabled: (switchProps.disabled || isReadOnly) })));
     return (React.createElement(FormControlLabel, { control: React.createElement(Switch, __assign({ checked: !!value, onChange: handleOnChange, onBlur: formikProps.handleBlur, inputProps: { 'aria-label': 'secondary checkbox' }, value: value }, __assign(__assign({}, switchProps), { disabled: (switchProps.disabled || isReadOnly) }))), label: label || '' }));
 };
