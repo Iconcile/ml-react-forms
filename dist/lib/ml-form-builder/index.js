@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || function () {
 };
 import * as React from 'react';
 import { map, isArray, uniqueId, get, isFunction, filter } from 'lodash';
+import { FastField } from 'formik';
 import { MUITextField, MUISelectField, MUICheckBox, MUISwitch, MUIRadio, MUIPlaceSuggest, MUIAutocomplete, MUIFieldArray, MUIDropDownTimePicker, MUIPhoneField } from './lib';
 import { MUIDatePicker, MUIDateTimePicker, MUITimePicker } from './lib/MUIDateTimePicker';
 import { getConditionalProps } from './lib/ConditionalOperation';
@@ -74,7 +75,10 @@ export var BuildFormRow = function (props) {
             return null;
         return (React.createElement("div", { key: "".concat(rowId, "_field_").concat(index), className: item.classNames, style: __assign({ flex: (item.flex || 1), marginRight: horizontalSpacing, paddingLeft: rowSettings.columnHorizontalPadding, paddingRight: rowSettings.columnHorizontalPadding }, item.styles) }, (settings.isReadOnly && item.readOnlyProps && isFunction(item.readOnlyProps.renderer)) ?
             (item.readOnlyProps.renderer({ formikProps: formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })) :
-            React.cloneElement(Component, { fieldProps: fieldProps, formikProps: formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })));
+            ((item === null || item === void 0 ? void 0 : item.isFastField) === true ? (React.createElement(FastField, { name: (item.name || item.valueKey) }, function (fastFieldProps) {
+                var mergedFieldProps = __assign(__assign({}, fieldProps), { field: fastFieldProps.field, meta: fastFieldProps.meta, form: fastFieldProps.form });
+                return React.cloneElement(Component, { fieldProps: mergedFieldProps, formikProps: formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly });
+            })) : (React.cloneElement(Component, { fieldProps: fieldProps, formikProps: formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })))));
     })));
 };
 var getUpdateSchema = function (schema, formId) {
