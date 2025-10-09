@@ -25,6 +25,7 @@ export interface FormConfig {
     classNames?: Array<string> | string,
     condition?: TFieldConditions
     readOnlyProps?: ReadOnlyProps
+    isFastField? : Boolean
 }
 
 interface RowSettingsProps {
@@ -34,7 +35,6 @@ interface RowSettingsProps {
 }
 export interface BuilderSettingsProps extends RowSettingsProps {
     isReadOnly?: boolean
-    isFastField?: boolean
 }
 
 export type RowSchema = Array<FormConfig> | FormConfig | { columns: Array<FormConfig>, settings?: RowSettingsProps };
@@ -63,7 +63,6 @@ export interface BuilderProps {
     actionConfig?: IFormActionProps
     settings?: BuilderSettingsProps
     isInProgress?: boolean
-    isFastField?: boolean
 }
 
 export interface IFieldProps {
@@ -153,7 +152,7 @@ export const BuildFormRow: React.FC<FormRowProps> = props => {
                                 (settings.isReadOnly && item.readOnlyProps && isFunction(item.readOnlyProps.renderer)) ?
                                     (item.readOnlyProps.renderer({ formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })) :
                                     (
-                                        settings?.isFastField === true ? (
+                                        item?.isFastField === true ? (
                                             <FastField name={(item.name || item.valueKey) as string}>
                                                 {(fastFieldProps: any) => {
                                                     const mergedFieldProps = { ...fieldProps, field: fastFieldProps.field, meta: fastFieldProps.meta, form: fastFieldProps.form };
@@ -184,7 +183,7 @@ const getUpdateSchema = (schema: Array<RowSchema>, formId: string) => {
 }
 
 export const MLFormContent = (props: BuilderProps) => {
-    const { schema, formId, formikProps, settings , isFastField } = props;
+    const { schema, formId, formikProps, settings } = props;
     const [formSchema, setFormSchema] = useState<Array<RowSchema>>(schema);
     useEffect(() => {
         setFormSchema(getUpdateSchema(schema, formId));
@@ -194,8 +193,7 @@ export const MLFormContent = (props: BuilderProps) => {
             {
                 map(formSchema, (configRow, index) => {
                     const rowId = `${formId}_row_${index}`;
-                    const effectiveSettings = { ...settings, isFastField } as BuilderSettingsProps;
-                    return (<BuildFormRow key={rowId} rowId={rowId} schema={configRow} formikProps={formikProps} settings={effectiveSettings} />);
+                    return (<BuildFormRow key={rowId} rowId={rowId} schema={configRow} formikProps={formikProps} settings={settings} />);
                 })
             }
         </>
