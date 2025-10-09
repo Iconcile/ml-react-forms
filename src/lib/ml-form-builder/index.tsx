@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { map, isArray, uniqueId, get, isFunction, filter } from 'lodash';
-import { FormikValues } from 'formik';
+import { FormikValues, FastField } from 'formik';
 import { MUITextField, MUISelectField, MUICheckBox, MUISwitch, MUIRadio, MUIPlaceSuggest, MUIAutocomplete, MUIFieldArray, MUIDropDownTimePicker, MUIPhoneField } from './lib';
 import { MUIDatePicker, MUIDateTimePicker, MUITimePicker } from './lib/MUIDateTimePicker';
 import { getConditionalProps, TFieldConditions } from './lib/ConditionalOperation';
@@ -34,6 +34,7 @@ interface RowSettingsProps {
 }
 export interface BuilderSettingsProps extends RowSettingsProps {
     isReadOnly?: boolean
+    isFastField?: boolean
 }
 
 export type RowSchema = Array<FormConfig> | FormConfig | { columns: Array<FormConfig>, settings?: RowSettingsProps };
@@ -62,6 +63,7 @@ export interface BuilderProps {
     actionConfig?: IFormActionProps
     settings?: BuilderSettingsProps
     isInProgress?: boolean
+    isFastField?: boolean
 }
 
 export interface IFieldProps {
@@ -150,7 +152,18 @@ export const BuildFormRow: React.FC<FormRowProps> = props => {
                             {
                                 (settings.isReadOnly && item.readOnlyProps && isFunction(item.readOnlyProps.renderer)) ?
                                     (item.readOnlyProps.renderer({ formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })) :
-                                    React.cloneElement(Component, { fieldProps, formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })
+                                    (
+                                        settings?.isFastField === true ? (
+                                            <FastField name={(item.name || item.valueKey) as string}>
+                                                {(fastFieldProps: any) => {
+                                                    const mergedFieldProps = { ...fieldProps, field: fastFieldProps.field, meta: fastFieldProps.meta, form: fastFieldProps.form };
+                                                    return React.cloneElement(Component, { fieldProps: mergedFieldProps, formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })
+                                                }}
+                                            </FastField>
+                                        ) : (
+                                            React.cloneElement(Component, { fieldProps, formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })
+                                        )
+                                    )
                             }
                         </div>
                     )
@@ -171,7 +184,7 @@ const getUpdateSchema = (schema: Array<RowSchema>, formId: string) => {
 }
 
 export const MLFormContent: React.FC<BuilderProps> = props => {
-    const { schema, formId, formikProps, settings } = props;
+    const { schema, formId, formikProps, settings , isFastField } = props;
     const [formSchema, setFormSchema] = useState<Array<RowSchema>>(schema);
     useEffect(() => {
         setFormSchema(getUpdateSchema(schema, formId));
@@ -181,7 +194,8 @@ export const MLFormContent: React.FC<BuilderProps> = props => {
             {
                 map(formSchema, (configRow, index) => {
                     const rowId = `${formId}_row_${index}`;
-                    return (<BuildFormRow key={rowId} rowId={rowId} schema={configRow} formikProps={formikProps} settings={settings} />);
+                    const effectiveSettings = { ...settings, isFastField } as BuilderSettingsProps;
+                    return (<BuildFormRow key={rowId} rowId={rowId} schema={configRow} formikProps={formikProps} settings={effectiveSettings} />);
                 })
             }
         </>
