@@ -183,7 +183,7 @@ const getUpdateSchema = (schema: Array<RowSchema>, formId: string) => {
     });
 }
 
-export const MLFormContent: React.FC<BuilderProps> = props => {
+export const MLFormContent = (props: BuilderProps) => {
     const { schema, formId, formikProps, settings , isFastField } = props;
     const [formSchema, setFormSchema] = useState<Array<RowSchema>>(schema);
     useEffect(() => {
