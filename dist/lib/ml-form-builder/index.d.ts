@@ -16,6 +16,7 @@ export interface FormConfig {
     classNames?: Array<string> | string;
     condition?: TFieldConditions;
     readOnlyProps?: ReadOnlyProps;
+    isFastField?: Boolean;
 }
 interface RowSettingsProps {
     horizontalSpacing?: number;
@@ -64,7 +65,7 @@ export declare const getComponentConfig: (type: string) => {
 export declare const attachField: (type: Array<string> | string, component: JSX.Element, props?: object) => void;
 export declare const setDefaultProps: (type: Array<string> | string, props: object) => void;
 export declare const BuildFormRow: React.FC<FormRowProps>;
-export declare const MLFormContent: React.FC<BuilderProps>;
+export declare const MLFormContent: (props: BuilderProps) => React.JSX.Element;
 export declare const MLFormAction: React.FC<IFormActionProps & Pick<BuilderProps, 'formId' | 'formikProps'>>;
 export declare const MLFormBuilder: React.FC<BuilderProps>;
 export default MLFormBuilder;
