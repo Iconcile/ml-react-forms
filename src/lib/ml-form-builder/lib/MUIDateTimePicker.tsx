@@ -50,11 +50,6 @@ export const MUIDatePicker: React.FC<IFieldProps & { fieldProps?: IMUIDatePicker
     set(updatedProps, 'slotProps.textField.name', fieldProps.name)
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '')
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur)
-    if ((fieldProps as any)['data-testid']) {
-        set(updatedProps, 'slotProps.textField.data-testid', (fieldProps as any)['data-testid'])
-    } else if (fieldProps.name) {
-        set(updatedProps, 'slotProps.textField.data-testid', 'datepicker-' + fieldProps.name)
-    }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -95,11 +90,6 @@ export const MUITimePicker: React.FC<IFieldProps & { fieldProps?: IMUITimePicker
     set(updatedProps, 'slotProps.textField.name', fieldProps.name)
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '')
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur)
-    if ((fieldProps as any)['data-testid']) {
-        set(updatedProps, 'slotProps.textField.data-testid', (fieldProps as any)['data-testid'])
-    } else if (fieldProps.name) {
-        set(updatedProps, 'slotProps.textField.data-testid', 'timepicker-' + fieldProps.name)
-    }
 
     return (
         <TimePicker  {...updatedProps} />
@@ -149,11 +139,6 @@ export const MUIDateTimePicker: React.FC<IFieldProps & { fieldProps?: IMUIDateTi
     set(updatedProps, 'slotProps.textField.name', fieldProps.name)
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '')
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur)
-    if ((fieldProps as any)['data-testid']) {
-        set(updatedProps, 'slotProps.textField.data-testid', (fieldProps as any)['data-testid'])
-    } else if (fieldProps.name) {
-        set(updatedProps, 'slotProps.textField.data-testid', 'datetimepicker-' + fieldProps.name)
-    }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
