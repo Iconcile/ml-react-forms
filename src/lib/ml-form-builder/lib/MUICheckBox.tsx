@@ -43,14 +43,14 @@ export const MUICheckBox: React.FC<ICheckboxProps> = (props) => {
                             map(menuOptions, (item: MenuOptionObject, index) => (
                                 <FormControlLabel
                                     key={`${fieldConfig.id}_check_${index}`}
-                                    control={<Checkbox checked={(indexOf(value, item.value) > -1)} onBlur={formikProps.handleBlur} onChange={formikProps.handleChange} value={item.value}  {...{ ...checkboxProps, id: `${fieldConfig.id}_check_${index}` }} />}
+                                    control={<Checkbox checked={(indexOf(value, item.value) > -1)} onBlur={formikProps.handleBlur} onChange={formikProps.handleChange} value={item.value}  {...{ ...checkboxProps, id: `${fieldConfig.id}_check_${index}` }} data-testid={`checkbox-${fieldProps.name}-${index}`} />}
                                     label={item.name || ''}
                                     {...formControlLabelProps}
                                 />
                             ))
                         ) : (
                             <FormControlLabel
-                                control={<Checkbox checked={(value || false)} onBlur={formikProps.handleBlur} onChange={formikProps.handleChange}  {...checkboxProps} />}
+                                control={<Checkbox checked={(value || false)} onBlur={formikProps.handleBlur} onChange={formikProps.handleChange}  {...checkboxProps} data-testid={`checkbox-${fieldProps.name}`} />}
                                 label={isLabelHtmlString ? <div dangerouslySetInnerHTML={{ __html: label }} /> : label}
                                 {...formControlLabelProps}
                             />

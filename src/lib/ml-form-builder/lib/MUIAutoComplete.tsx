@@ -218,6 +218,7 @@ export const MUIAutocomplete = React.memo(function MUIAutocomplete<T>(props: IPr
         id={fieldConfig.valueKey}
         disableClearable={clearOnSelect}
         value={transformValues ? transformValues(value) : value}
+        data-testid={`autocomplete-${fieldConfig.valueKey}`}
         renderInput={
             (params:any) => <TextField
                 {...params}

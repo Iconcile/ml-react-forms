@@ -8,7 +8,7 @@ export interface IProps extends IFieldProps {
 }
 export const MUIReadOnly: React.FC<IProps> = (props) => {
     return (
-        <div>
+        <div data-testid="readonly-field">
             <Typography variant="subtitle1">{props.label || ''}</Typography>
             <Typography>{props.value || 'NA'}</Typography>
         </div>

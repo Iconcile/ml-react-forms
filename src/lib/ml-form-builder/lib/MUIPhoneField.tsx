@@ -91,6 +91,7 @@ export const MUIPhoneField: FC<MUIPhoneFieldProps> = (props) => {
               labelId={fieldProps.name}
               value={code}
               onChange={codeChange}
+              data-testid={`phone-country-${fieldProps.name}`}
               {...countryCodeProps}
               native
             >
@@ -125,6 +126,7 @@ export const MUIPhoneField: FC<MUIPhoneFieldProps> = (props) => {
             value={value.split("-")[1] || ""}
             error={error}
             onChange={onChange}
+            data-testid={`phone-number-${fieldProps.name}`}
             {...phoneNumberProps}
           ></TextField>
         </Box>
