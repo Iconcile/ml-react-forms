@@ -52,7 +52,7 @@ export var MUIDropDownTimePicker = function (props) {
     return (React.createElement(FormControl, __assign({}, formControlProps),
         label &&
             (React.createElement(InputLabel, __assign({ id: labelId }, inputLabelProps), label)),
-        React.createElement(Select, __assign({ labelId: labelId, id: fieldConfig.id, value: value, onChange: onChange, error: error }, selectProps),
+        React.createElement(Select, __assign({ labelId: labelId, id: fieldConfig.id, value: value, onChange: onChange, error: error, "data-testid": fieldProps['data-testid'] || "timepicker-dropdown-".concat(fieldProps.name) }, selectProps),
             (emptyItem) &&
                 (React.createElement(MenuItem, __assign({ value: '' }, menuItemProps, emptyMenuItemProps), emptyItemText)),
             map(list, function (item, index) { return (React.createElement(MenuItem, __assign({}, menuItemProps, { key: "".concat(fieldConfig.id, "_menu_item_").concat(index), value: item.value }), item.name)); })),

@@ -30,7 +30,7 @@ export const MUISwitch: React.FC<IProps> = (props) => {
                     onBlur={formikProps.handleBlur}
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                     value={value}
-                    data-testid={`switch-${fieldProps.name}`}
+                    data-testid={(fieldProps as any)['data-testid'] || `switch-${fieldProps.name}`}
                     {...{ ...switchProps, disabled: (switchProps.disabled || isReadOnly) }}
                 />
             }

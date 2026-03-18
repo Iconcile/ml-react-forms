@@ -57,7 +57,7 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                 <div>
                     {
                         (values || []).map((value: any, index: number) => (
-                            <Box key={`${fieldProps.name}-${index}`} position={'relative'} data-testid={`field-array-item-${fieldProps.name}-${index}`}>
+                            <Box key={`${fieldProps.name}-${index}`} position={'relative'} data-testid={(fieldProps as any)['data-testid'] ? `${(fieldProps as any)['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
                                 {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
                                 {
                                     (removeButton) ? removeButton : (
@@ -66,7 +66,7 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                                             right: 0,
                                             top: '50%',
                                             transform: 'translate(0,-50%)'
-                                        }} size="small" onClick={() => handleRemove(arrayHelpers, index)} data-testid={`field-array-remove-${fieldProps.name}-${index}`} {...removeButtonProps}><CloseIcon /></IconButton>
+                                        }} size="small" onClick={() => handleRemove(arrayHelpers, index)} data-testid={(fieldProps as any)['data-testid'] ? `${(fieldProps as any)['data-testid']}-remove-${index}` : `field-array-remove-${fieldProps.name}-${index}`} {...removeButtonProps}><CloseIcon /></IconButton>
                                     )
                                 }
 
@@ -74,7 +74,7 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                         ))
                     }
                     <div>
-                        {(addButton) ? addButton : (<Button type="button" onClick={() => arrayHelpers.push(defaultData)} data-testid={`field-array-add-${fieldProps.name}`} {...addButtonProps}>{addButtonText}</Button>)}
+                        {(addButton) ? addButton : (<Button type="button" onClick={() => arrayHelpers.push(defaultData)} data-testid={(fieldProps as any)['data-testid'] || `field-array-add-${fieldProps.name}`} {...addButtonProps}>{addButtonText}</Button>)}
                     </div>
 
                 </div>

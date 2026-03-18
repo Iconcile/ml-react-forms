@@ -80,7 +80,7 @@ export const MUIDropDownTimePicker: FC<MUIDropDownTimePickerProps> = (props) => 
                 value={value}
                 onChange={onChange}
                 error={error}
-                data-testid={`timepicker-dropdown-${fieldProps.name}`}
+                data-testid={(fieldProps as any)['data-testid'] || `timepicker-dropdown-${fieldProps.name}`}
                 {...selectProps}
             >
                 {

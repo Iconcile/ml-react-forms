@@ -78,7 +78,7 @@ var SearchField = function (props) {
             label: textFieldProps.label || 'Search Places',
             className: 'location-search-input',
             onBlur: formikProps.handleBlur
-        }), updatedProps))));
+        }), updatedProps, { "data-testid": fieldProps['data-testid'] || "place-suggest-".concat(fieldProps.name) }))));
 };
 var LIST_CONTAINER_STYLES = { position: 'absolute', left: 0, top: '100%', right: 0, zIndex: 500 };
 var PlaceList = function (props) {
