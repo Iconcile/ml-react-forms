@@ -45,7 +45,7 @@ export var MUISelectField = React.memo(function (props) {
     return (React.createElement(FormControl, __assign({ error: !!fieldError }, formControlProps),
         label &&
             (React.createElement(InputLabel, __assign({ id: labelId }, inputLabelProps), label)),
-        React.createElement(Select, __assign({ labelId: labelId, id: fieldConfig.id, value: value, onChange: handleChange, onBlur: formikProps.handleBlur, label: label }, selectProps),
+        React.createElement(Select, __assign({ labelId: labelId, id: fieldConfig.id, value: value, onChange: handleChange, onBlur: formikProps.handleBlur, label: label, "data-testid": fieldProps['data-testid'] || "select-".concat(fieldProps.name) }, selectProps),
             (emptyItem) &&
                 (React.createElement(MenuItem, __assign({ value: '' }, emptyMenuItemProps), emptyItemText)),
             // @ts-ignore MenuItem props types have some ambiguity in Mui type Definition

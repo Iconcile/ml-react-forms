@@ -56,6 +56,7 @@ export const MUIFileInput: React.FC<MUIFileInputProps> = (props: MUIFileInputPro
 			title={disableDefaultTooltip ? " " : undefined}
 			accept={accept}
 			onChange={handleChange}
+			data-testid={inputProps?.['data-testid'] || 'file-input'}
 			{...inputProps}
 		/>
 	)

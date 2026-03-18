@@ -67,6 +67,7 @@ export const MUISelectField: React.FC<IProps> = React.memo((props) => {
                 onChange={handleChange}
                 onBlur={formikProps.handleBlur}
                 label={label}
+                data-testid={(fieldProps as any)['data-testid'] || `select-${fieldProps.name}`}
                 {...selectProps}
             >
                 {

@@ -110,7 +110,7 @@ const SearchField: React.FC<ISearchFieldProps> = props => {
                 label: textFieldProps.label || 'Search Places',
                 className: 'location-search-input',
                 onBlur: formikProps.handleBlur
-            })} {...updatedProps} />
+            })} {...updatedProps} data-testid={(fieldProps as any)['data-testid'] || `place-suggest-${fieldProps.name}`} />
         </div>
     )
 }

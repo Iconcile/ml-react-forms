@@ -33,9 +33,9 @@ export var MUIRadio = function (props) {
     return (React.createElement(FormControl, __assign({ error: !!fieldError }, formControlProps),
         (header) &&
             (React.createElement(FormLabel, __assign({}, headerProps), header)),
-        React.createElement(RadioGroup, __assign({ name: fieldProps.name, value: fieldValue, onChange: formikProps.handleChange, onBlur: formikProps.handleBlur }, radioGroupProps), map(menuOptions, function (option, index) {
+        React.createElement(RadioGroup, __assign({ name: fieldProps.name, value: fieldValue, onChange: formikProps.handleChange, onBlur: formikProps.handleBlur, "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-group") : "radio-group-".concat(fieldProps.name) }, radioGroupProps), map(menuOptions, function (option, index) {
             var value = option.value, name = option.name, rest = __rest(option, ["value", "name"]);
-            return (React.createElement(FormControlLabel, __assign({ key: "".concat(fieldProps.id, "_option_item_").concat(index), value: value + '', label: name, control: React.createElement(Radio, __assign({}, radioProps)) }, rest)));
+            return (React.createElement(FormControlLabel, __assign({ key: "".concat(fieldProps.id, "_option_item_").concat(index), value: value + '', label: name, control: React.createElement(Radio, __assign({}, radioProps, { "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-").concat(index) : "radio-".concat(fieldProps.name, "-").concat(index) })) }, rest)));
         })),
         (fieldError || helperText) &&
             (React.createElement(FormHelperText, __assign({}, formHelperTextProps), fieldError || helperText))));

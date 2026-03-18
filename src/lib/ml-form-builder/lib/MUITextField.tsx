@@ -33,7 +33,7 @@ export const MUITextField: React.FC<IProps> = React.memo((props) => {
         return (<MUIReadOnly label={updatedProps.label} value={updatedProps.value} />);
     }
     return (
-        <TextField {...updatedProps} />
+        <TextField {...updatedProps} data-testid={(updatedProps as any)['data-testid'] || `text-${fieldProps.name}`} />
     )
 }, (p, n) => {
 

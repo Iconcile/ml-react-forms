@@ -31,7 +31,7 @@ export var MUITextField = React.memo(function (props) {
     if (isReadOnly) {
         return (React.createElement(MUIReadOnly, { label: updatedProps.label, value: updatedProps.value }));
     }
-    return (React.createElement(TextField, __assign({}, updatedProps)));
+    return (React.createElement(TextField, __assign({}, updatedProps, { "data-testid": updatedProps['data-testid'] || "text-".concat(fieldProps.name) })));
 }, function (p, n) {
     var _a, _b, _c, _d;
     p.fieldProps.id = '1';

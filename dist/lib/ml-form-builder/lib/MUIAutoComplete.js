@@ -240,9 +240,9 @@ export var MUIAutocomplete = React.memo(function MUIAutocomplete(props) {
         // @ts-ignore
         onChange: onItemSelect, onInputChange: onInputChange, getOptionLabel: getOptionLabel, onOpen: function () { setOpen(true); }, open: open, onClose: function () { setOpen(false); }, options: options.length > 0 ? options : defaultOptions, isOptionEqualToValue: idKey ? function (option, value) { return option[idKey] === value[idKey]; } : undefined, 
         // @ts-ignore
-        renderOption: defaultRenderOptions, id: fieldConfig.valueKey, disableClearable: clearOnSelect, value: transformValues ? transformValues(value) : value, renderInput: function (params) { return React.createElement(TextField, __assign({}, params, { value: query, ref: ref, onChange: function (e) { return handleChange(e.target.value); }, 
+        renderOption: defaultRenderOptions, id: fieldConfig.valueKey, disableClearable: clearOnSelect, value: transformValues ? transformValues(value) : value, "data-testid": fieldProps['data-testid'] || "autocomplete-".concat(fieldConfig.valueKey), renderInput: function (params) { return React.createElement(TextField, __assign({}, params, { value: query, ref: ref, onChange: function (e) { return handleChange(e.target.value); }, 
             // @ts-ignore
-            fullWidth: true, error: error, helperText: fieldError, name: fieldConfig.valueKey, onBlur: formikProps.handleBlur }, renderInputProps, { InputProps: __assign(__assign(__assign({}, params.InputProps), { 
+            fullWidth: true, error: error, helperText: fieldError, name: fieldConfig.valueKey, "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-input") : "autocomplete-".concat(fieldConfig.valueKey, "-input"), onBlur: formikProps.handleBlur }, renderInputProps, { InputProps: __assign(__assign(__assign({}, params.InputProps), { 
                 // @ts-ignore
                 endAdornment: (React.createElement(React.Fragment, null,
                     loading ? React.createElement(CircularProgress, { color: "primary", size: 20 }) : null,
