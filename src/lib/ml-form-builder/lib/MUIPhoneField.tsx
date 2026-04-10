@@ -20,6 +20,7 @@ import { COUNTRY_LIST } from "./Constants";
 
 
 export interface IMUIPhoneFieldProps {
+  'data-testid'?: string;
   name?: string;
   countryCodeProps?: SelectProps;
   countryCodeLabel?: string;
@@ -91,8 +92,8 @@ export const MUIPhoneField: FC<MUIPhoneFieldProps> = (props) => {
               labelId={fieldProps.name}
               value={code}
               onChange={codeChange}
-              data-testid={(fieldProps as any)['data-testid'] ? `${(fieldProps as any)['data-testid']}-country` : `phone-country-${fieldProps.name}`}
               {...countryCodeProps}
+              data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-country` : `phone-country-${fieldProps.name}`}
               native
             >
               {
@@ -126,8 +127,8 @@ export const MUIPhoneField: FC<MUIPhoneFieldProps> = (props) => {
             value={value.split("-")[1] || ""}
             error={error}
             onChange={onChange}
-            data-testid={(fieldProps as any)['data-testid'] ? `${(fieldProps as any)['data-testid']}-number` : `phone-number-${fieldProps.name}`}
             {...phoneNumberProps}
+            data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-number` : `phone-number-${fieldProps.name}`}
           ></TextField>
         </Box>
       </Box>

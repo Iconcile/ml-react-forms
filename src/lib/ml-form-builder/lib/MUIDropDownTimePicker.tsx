@@ -6,6 +6,7 @@ import moment from 'moment'
 import { IFieldProps, FormConfig } from '..';
 import { MenuOptionObject, getFieldError } from '../Utils';
 export interface IMUIDropDownTimePickerProps extends SelectProps {
+    'data-testid'?: string
     label?: string
     emptyItem?: string | boolean
     helperText?: string
@@ -39,6 +40,7 @@ export const MUIDropDownTimePicker: FC<MUIDropDownTimePickerProps> = (props) => 
         formikProps = {} as FormikValues, } = props;
     const fieldError = getFieldError((fieldProps.name || ''), formikProps);
     const {
+        'data-testid': ddtpTestId,
         formControlProps = {} as FormControlProps,
         startTime = '00:00',
         endTime = '23:45',
@@ -80,8 +82,8 @@ export const MUIDropDownTimePicker: FC<MUIDropDownTimePickerProps> = (props) => 
                 value={value}
                 onChange={onChange}
                 error={error}
-                data-testid={(fieldProps as any)['data-testid'] || `timepicker-dropdown-${fieldProps.name}`}
                 {...selectProps}
+                data-testid={ddtpTestId || `timepicker-dropdown-${fieldProps.name}`}
             >
                 {
                     (emptyItem) &&

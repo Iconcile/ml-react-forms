@@ -6,6 +6,7 @@ import { get } from 'lodash';
 
 
 export interface IMUISwitchProps extends SwitchProps {
+    'data-testid'?: string
     label?: string
 }
 
@@ -15,7 +16,7 @@ export interface IProps extends IFieldProps {
 
 export const MUISwitch: React.FC<IProps> = (props) => {
     const { formikProps = {} as FormikValues, fieldProps = {} as IMUISwitchProps, isReadOnly = false } = props;
-    const { label, ...switchProps } = fieldProps;
+    const { 'data-testid': swTestId, label, ...switchProps } = fieldProps;
     const value = get(formikProps, `values.${fieldProps.name}`);
 
     const handleOnChange = () => {
@@ -30,8 +31,8 @@ export const MUISwitch: React.FC<IProps> = (props) => {
                     onBlur={formikProps.handleBlur}
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                     value={value}
-                    data-testid={(fieldProps as any)['data-testid'] || `switch-${fieldProps.name}`}
                     {...{ ...switchProps, disabled: (switchProps.disabled || isReadOnly) }}
+                    data-testid={swTestId || `switch-${fieldProps.name}`}
                 />
             }
             label={label || ''}

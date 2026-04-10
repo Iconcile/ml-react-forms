@@ -8,6 +8,7 @@ import { MenuOptionObject, getMenuOptions, getFieldError } from '../Utils';
 export type MenuOptionObj = MenuOptionObject & { controlProps?: FormControlLabelProps };
 export type MenuOptions = Array<string> | Array<MenuOptionObj>;
 export interface IMUIRadioProps {
+    'data-testid'?: string
     options?: MenuOptions
     header?: string
     name?: string
@@ -37,7 +38,7 @@ export const MUIRadio: React.FC<IProps> = props => {
                 (header) &&
                 (<FormLabel {...headerProps}>{header}</FormLabel>)
             }
-            <RadioGroup name={fieldProps.name} value={fieldValue} onChange={formikProps.handleChange} onBlur={formikProps.handleBlur} data-testid={(fieldProps as any)['data-testid'] ? `${(fieldProps as any)['data-testid']}-group` : `radio-group-${fieldProps.name}`} {...radioGroupProps}>
+            <RadioGroup name={fieldProps.name} value={fieldValue} onChange={formikProps.handleChange} onBlur={formikProps.handleBlur} {...radioGroupProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-group` : `radio-group-${fieldProps.name}`}>
                 {
                     map(menuOptions, (option: MenuOptionObj, index: number) => {
                         const { value, name, ...rest } = option;
@@ -46,7 +47,7 @@ export const MUIRadio: React.FC<IProps> = props => {
                                 key={`${fieldProps.id}_option_item_${index}`}
                                 value={value + ''}
                                 label={name}
-                                control={<Radio {...radioProps} data-testid={(fieldProps as any)['data-testid'] ? `${(fieldProps as any)['data-testid']}-${index}` : `radio-${fieldProps.name}-${index}`} />}
+                                control={<Radio {...radioProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-${index}` : `radio-${fieldProps.name}-${index}`} />}
                                 {...rest}
                             />
                         )

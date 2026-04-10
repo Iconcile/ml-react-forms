@@ -6,6 +6,7 @@ import { get, map, isString, isEqual } from 'lodash';
 import { MenuOptions, MenuOptionObject, getMenuOptions, getFieldError } from '../Utils';
 
 export interface IMUISelectProps extends SelectProps {
+    'data-testid'?: string
     label?: string
     options?: MenuOptions
     emptyItem?: string | boolean
@@ -24,7 +25,8 @@ export interface IProps extends IFieldProps {
 
 export const MUISelectField: React.FC<IProps> = React.memo((props) => {
     const { fieldConfig = {} as FormConfig, formikProps = {} as FormikValues, fieldProps = {} as IMUISelectProps } = props;
-    const { label,
+    const { 'data-testid': selTestId,
+        label,
         options = [],
         emptyItem,
         helperText,
@@ -67,8 +69,8 @@ export const MUISelectField: React.FC<IProps> = React.memo((props) => {
                 onChange={handleChange}
                 onBlur={formikProps.handleBlur}
                 label={label}
-                data-testid={(fieldProps as any)['data-testid'] || `select-${fieldProps.name}`}
                 {...selectProps}
+                data-testid={selTestId || `select-${fieldProps.name}`}
             >
                 {
                     (emptyItem) &&
