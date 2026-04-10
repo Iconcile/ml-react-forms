@@ -3,6 +3,7 @@ import { FormControlProps, FormHelperTextProps, SelectProps } from '@mui/materia
 import { IFieldProps } from '../index';
 import { MenuOptions } from '../Utils';
 export interface IMUISelectProps extends SelectProps {
+    'data-testid'?: string;
     label?: string;
     options?: MenuOptions;
     emptyItem?: string | boolean;

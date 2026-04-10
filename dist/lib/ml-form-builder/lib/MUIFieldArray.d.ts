@@ -3,6 +3,7 @@ import { IFieldProps } from '../index';
 import { FieldArrayRenderProps } from 'formik';
 import { ButtonProps, IconButtonProps, TextFieldProps } from '@mui/material';
 interface IFieldArrayProps {
+    'data-testid'?: string;
     name: string;
     id: string;
     itemType: string;

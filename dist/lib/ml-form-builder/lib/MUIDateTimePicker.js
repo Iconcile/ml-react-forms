@@ -1,5 +1,5 @@
 var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function (t) {
+    __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
             s = arguments[i];
             for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
@@ -34,7 +34,7 @@ export var MUIDatePicker = function (props) {
     var value = get(formikProps, "values.".concat(fieldProps.name));
     //const [selectedDate, setSelectedDate] = React.useState<MaterialUiPickersDate | null>(initValue ? initValue : null);
     var fieldError = getFieldError(fieldProps.name || '', formikProps);
-    var outputFormat = fieldProps.outputFormat, datePickerProps = __rest(fieldProps, ["outputFormat"]);
+    var outputFormat = fieldProps.outputFormat, dataTestId = fieldProps["data-testid"], datePickerProps = __rest(fieldProps, ["outputFormat", 'data-testid']);
     var handleDateChange = function (date) {
         //setSelectedDate(date);
         if (!date) {
@@ -45,23 +45,28 @@ export var MUIDatePicker = function (props) {
         formikProps.setFieldValue(fieldProps.name, dateValue);
     };
     //  (!value) ? null : value,
-    var updatedProps = __assign(__assign({}, datePickerProps), {
-        onChange: handleDateChange, value: (!value) ? null : (typeof value === 'string') ? dayjs(value) : value, inputValue: (!value) ? '' : (typeof value === 'string') ? dayjs(value) : value, format: fieldProps.format || 'MM/DD/YYYY', onError: function (error) {
+    var updatedProps = __assign(__assign({}, datePickerProps), { onChange: handleDateChange, value: (!value) ? null : (typeof value === 'string') ? dayjs(value) : value, inputValue: (!value) ? '' : (typeof value === 'string') ? dayjs(value) : value, format: fieldProps.format || 'MM/DD/YYYY', onError: function (error) {
             // handle as a side effect
             if (error !== fieldError) {
                 formikProps.setFieldError(fieldProps.name, error);
             }
-        }
-    });
+        } });
     set(updatedProps, 'slotProps.textField.error', !!fieldError);
     set(updatedProps, 'slotProps.textField.name', fieldProps.name);
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '');
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur);
+    if (dataTestId) {
+        set(updatedProps, 'slotProps.textField.data-testid', dataTestId);
+    }
+    else if (fieldProps.name) {
+        set(updatedProps, 'slotProps.textField.data-testid', 'datepicker-' + fieldProps.name);
+    }
     return (React.createElement(LocalizationProvider, { dateAdapter: AdapterDayjs },
         React.createElement(DatePicker, __assign({}, updatedProps))));
 };
 export var MUITimePicker = function (props) {
     var _a = props.fieldProps, fieldProps = _a === void 0 ? {} : _a, _b = props.formikProps, formikProps = _b === void 0 ? {} : _b;
+    var timeTestId = fieldProps["data-testid"], timePickerProps = __rest(fieldProps, ['data-testid']);
     var fieldError = get(formikProps, "errors.".concat(fieldProps.name));
     var value = get(formikProps, "values.".concat(fieldProps.name));
     var handleTimeChange = function (time) {
@@ -70,17 +75,21 @@ export var MUITimePicker = function (props) {
         else
             formikProps.setFieldValue(fieldProps.name, new Date(time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }));
     };
-    var updatedProps = __assign(__assign({}, fieldProps), {
-        error: !!fieldError, helperText: (fieldError || ''), onChange: handleTimeChange, value: (!value) ? null : (typeof value === 'string') ? dayjs(value) : value, inputValue: (!value) ? '' : (typeof value === 'string') ? dayjs(value) : value, onError: function (error) {
+    var updatedProps = __assign(__assign({}, timePickerProps), { error: !!fieldError, helperText: (fieldError || ''), onChange: handleTimeChange, value: (!value) ? null : (typeof value === 'string') ? dayjs(value) : value, inputValue: (!value) ? '' : (typeof value === 'string') ? dayjs(value) : value, onError: function (error) {
             if (error !== fieldError) {
                 formikProps.setFieldError(fieldProps.name, error);
             }
-        }
-    });
+        } });
     set(updatedProps, 'slotProps.textField.error', !!fieldError);
     set(updatedProps, 'slotProps.textField.name', fieldProps.name);
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '');
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur);
+    if (timeTestId) {
+        set(updatedProps, 'slotProps.textField.data-testid', timeTestId);
+    }
+    else if (fieldProps.name) {
+        set(updatedProps, 'slotProps.textField.data-testid', 'timepicker-' + fieldProps.name);
+    }
     return (React.createElement(TimePicker, __assign({}, updatedProps)));
 };
 export var MUIDateTimePicker = function (props) {
@@ -88,7 +97,7 @@ export var MUIDateTimePicker = function (props) {
     var value = get(formikProps, "values.".concat(fieldProps.name));
     //const [selectedDate, setSelectedDate] = React.useState<MaterialUiPickersDate | null>(initValue ? initValue : null);
     var fieldError = get(formikProps, "errors.".concat(fieldProps.name));
-    var outputFormat = fieldProps.outputFormat, datePickerProps = __rest(fieldProps, ["outputFormat"]);
+    var outputFormat = fieldProps.outputFormat, dtTestId = fieldProps["data-testid"], datePickerProps = __rest(fieldProps, ["outputFormat", 'data-testid']);
     var defaultFormat = 'MM/DD/YYYY HH:mmA';
     var handleDateChange = function (datetime) {
         //setSelectedDate(date);
@@ -99,23 +108,22 @@ export var MUIDateTimePicker = function (props) {
         var dateValue = (outputFormat === 'date') ? datetime : datetime.format(outputFormat || fieldProps.format || defaultFormat);
         formikProps.setFieldValue(fieldProps.name, dateValue);
     };
-    var updatedProps = __assign(__assign({}, datePickerProps), {
-        error: !!fieldError, helperText: (fieldError || ''),
-        onChange: handleDateChange,
-        value: (!value) ? null : (typeof value === 'string') ? dayjs(value) : value,
-        inputValue: (!value) ? '' : (typeof value === 'string') ? dayjs(value) : value,
-        format: fieldProps.format || defaultFormat,
-        onError: function (error) {
+    var updatedProps = __assign(__assign({}, datePickerProps), { error: !!fieldError, helperText: (fieldError || ''), onChange: handleDateChange, value: (!value) ? null : (typeof value === 'string') ? dayjs(value) : value, inputValue: (!value) ? '' : (typeof value === 'string') ? dayjs(value) : value, format: fieldProps.format || defaultFormat, onError: function (error) {
             // handle as a side effect
             if (error !== fieldError) {
                 formikProps.setFieldError(fieldProps.name, error);
             }
-        }
-    });
+        } });
     set(updatedProps, 'slotProps.textField.error', !!fieldError);
     set(updatedProps, 'slotProps.textField.name', fieldProps.name);
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '');
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur);
+    if (dtTestId) {
+        set(updatedProps, 'slotProps.textField.data-testid', dtTestId);
+    }
+    else if (fieldProps.name) {
+        set(updatedProps, 'slotProps.textField.data-testid', 'datetimepicker-' + fieldProps.name);
+    }
     return (React.createElement(LocalizationProvider, { dateAdapter: AdapterDayjs },
         React.createElement(DateTimePicker, __assign({}, updatedProps))));
 };

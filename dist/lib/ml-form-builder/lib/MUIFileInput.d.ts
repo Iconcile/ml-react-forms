@@ -1,5 +1,6 @@
 import React from 'react';
 interface MUIFileInputProps {
+    'data-testid'?: string;
     disabled?: boolean;
     multiple?: boolean;
     accept?: string;

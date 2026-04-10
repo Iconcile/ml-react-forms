@@ -29,9 +29,9 @@ export var MUITextField = React.memo(function (props) {
             }
         }, onBlur: formikProps.handleBlur, value: (_a = get(formikProps, "values.".concat(fieldProps.name))) !== null && _a !== void 0 ? _a : '' });
     if (isReadOnly) {
-        return (React.createElement(MUIReadOnly, { label: updatedProps.label, value: updatedProps.value }));
+        return (React.createElement(MUIReadOnly, { label: updatedProps.label, value: updatedProps.value, fieldConfig: props.fieldConfig, "data-testid": fieldProps['data-testid'] }));
     }
-    return (React.createElement(TextField, __assign({}, updatedProps)));
+    return (React.createElement(TextField, __assign({}, updatedProps, { "data-testid": fieldProps['data-testid'] || "text-".concat(fieldProps.name) })));
 }, function (p, n) {
     var _a, _b, _c, _d;
     p.fieldProps.id = '1';

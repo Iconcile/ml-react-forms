@@ -2,6 +2,7 @@ import { FormControlProps, FormHelperTextProps, SelectProps } from '@mui/materia
 import { FC } from 'react';
 import { IFieldProps } from '..';
 export interface IMUIDropDownTimePickerProps extends SelectProps {
+    'data-testid'?: string;
     label?: string;
     emptyItem?: string | boolean;
     helperText?: string;

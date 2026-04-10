@@ -39,6 +39,7 @@ export interface PlacesAutocompleteChildrenProps {
 }
 
 export interface PlaceSuggestProps {
+    'data-testid'?: string,
     name?: string,
     id?: string,
     textFieldProps?: TextFieldProps,
@@ -51,6 +52,7 @@ export interface PlaceSuggestProps {
 }
 
 interface IFieldLayoutProps extends Omit<PlaceSuggestProps, 'placeAutocompleteProps'> {
+
     resetField: () => void,
     currentAddress?: string,
     selectedValue?: google.maps.LatLngLiteral,
@@ -68,7 +70,7 @@ interface ISearchFieldProps {
     placeAutocompleteProps?: PlacesAutocompleteChildrenProps,
     resetField: () => void,
     formikProps?: FormikValues,
-    fieldProps: Pick<PlaceSuggestProps, 'name' | 'id' | 'textFieldProps'>
+    fieldProps: Pick<PlaceSuggestProps, 'data-testid' | 'name' | 'id' | 'textFieldProps'>
 }
 
 interface IPlaceListProps {
@@ -110,7 +112,7 @@ const SearchField: React.FC<ISearchFieldProps> = props => {
                 label: textFieldProps.label || 'Search Places',
                 className: 'location-search-input',
                 onBlur: formikProps.handleBlur
-            })} {...updatedProps} />
+            })} {...updatedProps} data-testid={fieldProps['data-testid'] || `place-suggest-${fieldProps.name}`} />
         </div>
     )
 }
@@ -148,6 +150,7 @@ const PlaceList: React.FC<IPlaceListProps> = props => {
 
 const FieldLayout: React.FC<IFieldLayoutProps> = props => {
     const { currentAddress, selectedValue, placeAutocompleteProps, name, id, textFieldProps } = props;
+    const testId = props['data-testid'];
     return (
         <div>
             <SearchField resetField={props.resetField}
@@ -155,7 +158,7 @@ const FieldLayout: React.FC<IFieldLayoutProps> = props => {
                 value={selectedValue}
                 placeAutocompleteProps={placeAutocompleteProps}
                 formikProps={props.formikProps}
-                fieldProps={{ name, id, textFieldProps }}
+                fieldProps={{ 'data-testid': testId, name, id, textFieldProps }}
             />
             <PlaceList
                 placeAutocompleteProps={placeAutocompleteProps}

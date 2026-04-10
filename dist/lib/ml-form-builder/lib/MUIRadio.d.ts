@@ -7,6 +7,7 @@ export type MenuOptionObj = MenuOptionObject & {
 };
 export type MenuOptions = Array<string> | Array<MenuOptionObj>;
 export interface IMUIRadioProps {
+    'data-testid'?: string;
     options?: MenuOptions;
     header?: string;
     name?: string;

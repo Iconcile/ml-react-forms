@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getComponentConfig } from '../index';
 
 interface IFieldArrayProps {
+    'data-testid'?: string
     name: string
     id: string
     itemType: string
@@ -57,7 +58,7 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                 <div>
                     {
                         (values || []).map((value: any, index: number) => (
-                            <Box key={`${fieldProps.name}-${index}`} position={'relative'}>
+                            <Box key={`${fieldProps.name}-${index}`} position={'relative'} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
                                 {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
                                 {
                                     (removeButton) ? removeButton : (
@@ -66,7 +67,7 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                                             right: 0,
                                             top: '50%',
                                             transform: 'translate(0,-50%)'
-                                        }} size="small" onClick={() => handleRemove(arrayHelpers, index)} {...removeButtonProps}><CloseIcon /></IconButton>
+                                        }} size="small" onClick={() => handleRemove(arrayHelpers, index)} {...removeButtonProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-remove-${index}` : `field-array-remove-${fieldProps.name}-${index}`}><CloseIcon /></IconButton>
                                     )
                                 }
 
@@ -74,7 +75,7 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                         ))
                     }
                     <div>
-                        {(addButton) ? addButton : (<Button type="button" onClick={() => arrayHelpers.push(defaultData)} {...addButtonProps}>{addButtonText}</Button>)}
+                        {(addButton) ? addButton : (<Button type="button" onClick={() => arrayHelpers.push(defaultData)} {...addButtonProps} data-testid={fieldProps['data-testid'] || `field-array-add-${fieldProps.name}`}>{addButtonText}</Button>)}
                     </div>
 
                 </div>

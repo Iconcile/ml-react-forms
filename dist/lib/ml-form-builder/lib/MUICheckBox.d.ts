@@ -3,6 +3,7 @@ import { IFieldProps } from '../index';
 import { FormControlProps, FormHelperTextProps, FormControlLabelProps, CheckboxProps, FormLabelProps, FormGroupProps } from '@mui/material';
 import { MenuOptions } from '../Utils';
 export interface IMUICheckboxProps extends CheckboxProps {
+    'data-testid'?: string;
     label?: string;
     helperText?: string;
     options?: MenuOptions;

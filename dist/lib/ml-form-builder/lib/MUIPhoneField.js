@@ -46,7 +46,7 @@ export var MUIPhoneField = function (props) {
             React.createElement(Box, __assign({ width: "30%" }, countryCodeContainerProps),
                 React.createElement(FormControl, __assign({ fullWidth: true }, countryCodeFormControlProps, { error: error }),
                     React.createElement(InputLabel, { id: fieldProps.name }, countryCodeLabel || "Country code"),
-                    React.createElement(Select, __assign({ labelId: fieldProps.name, value: code, onChange: codeChange }, countryCodeProps, { native: true }),
+                    React.createElement(Select, __assign({ labelId: fieldProps.name, value: code, onChange: codeChange }, countryCodeProps, { "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-country") : "phone-country-".concat(fieldProps.name), native: true }),
                         (emptyItem) &&
                             (React.createElement("option", { value: '' }, emptyItemText)),
                         COUNTRY_LIST.map(function (country, index) {
@@ -57,7 +57,7 @@ export var MUIPhoneField = function (props) {
             React.createElement(Box, __assign({ width: "70%", marginLeft: "5px" }, phoneContainerProps),
                 React.createElement(TextField, __assign({ fullWidth: true, label: phoneLabel || "Phone", InputProps: {
                         name: fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey,
-                    }, onBlur: handleBlur, autoComplete: "nope", type: "tel", value: value.split("-")[1] || "", error: error, onChange: onChange }, phoneNumberProps)))),
+                    }, onBlur: handleBlur, autoComplete: "nope", type: "tel", value: value.split("-")[1] || "", error: error, onChange: onChange }, phoneNumberProps, { "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-number") : "phone-number-".concat(fieldProps.name) })))),
         error && (React.createElement(Typography, { variant: "overline", style: newError ? {
                 color: "#B71840",
                 fontSize: 12,

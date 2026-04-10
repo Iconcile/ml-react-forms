@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { getFieldError } from '../Utils';
 
 export interface IMUIDatePickerProps extends DatePickerProps<any> {
+    'data-testid'?: string
     outputFormat?: string
     name?: string
 }
@@ -21,7 +22,7 @@ export const MUIDatePicker: React.FC<IFieldProps & { fieldProps?: IMUIDatePicker
     const value = get(formikProps, `values.${fieldProps.name}`);
     //const [selectedDate, setSelectedDate] = React.useState<MaterialUiPickersDate | null>(initValue ? initValue : null);
     const fieldError = getFieldError(fieldProps.name || '', formikProps);
-    const { outputFormat, ...datePickerProps } = fieldProps;
+    const { outputFormat, 'data-testid': dataTestId, ...datePickerProps } = fieldProps;
     const handleDateChange = (date: any | null) => {
         //setSelectedDate(date);
         if (!date) {
@@ -50,6 +51,11 @@ export const MUIDatePicker: React.FC<IFieldProps & { fieldProps?: IMUIDatePicker
     set(updatedProps, 'slotProps.textField.name', fieldProps.name)
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '')
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur)
+    if (dataTestId) {
+        set(updatedProps, 'slotProps.textField.data-testid', dataTestId)
+    } else if (fieldProps.name) {
+        set(updatedProps, 'slotProps.textField.data-testid', 'datepicker-' + fieldProps.name)
+    }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -59,11 +65,13 @@ export const MUIDatePicker: React.FC<IFieldProps & { fieldProps?: IMUIDatePicker
 }
 
 export interface IMUITimePickerProps extends TimePickerProps<any> {
+    'data-testid'?: string
     name?: string
 }
 
 export const MUITimePicker: React.FC<IFieldProps & { fieldProps?: IMUITimePickerProps }> = props => {
     const { fieldProps = {} as IMUITimePickerProps, formikProps = {} as FormikProps<any> } = props;
+    const { 'data-testid': timeTestId, ...timePickerProps } = fieldProps;
     const fieldError = get(formikProps, `errors.${fieldProps.name}`);
     const value = get(formikProps, `values.${fieldProps.name}`);
     const handleTimeChange = (time: any | null) => {
@@ -73,7 +81,7 @@ export const MUITimePicker: React.FC<IFieldProps & { fieldProps?: IMUITimePicker
             formikProps.setFieldValue(fieldProps.name, new Date(time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }))
     }
     const updatedProps = {
-        ...fieldProps,
+        ...timePickerProps,
         error: !!fieldError,
         helperText: (fieldError || ''),
         onChange: handleTimeChange,
@@ -90,6 +98,11 @@ export const MUITimePicker: React.FC<IFieldProps & { fieldProps?: IMUITimePicker
     set(updatedProps, 'slotProps.textField.name', fieldProps.name)
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '')
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur)
+    if (timeTestId) {
+        set(updatedProps, 'slotProps.textField.data-testid', timeTestId)
+    } else if (fieldProps.name) {
+        set(updatedProps, 'slotProps.textField.data-testid', 'timepicker-' + fieldProps.name)
+    }
 
     return (
         <TimePicker  {...updatedProps} />
@@ -97,6 +110,7 @@ export const MUITimePicker: React.FC<IFieldProps & { fieldProps?: IMUITimePicker
 }
 
 export interface IMUIDateTimePickerProps extends DateTimePickerProps<any> {
+    'data-testid'?: string
     outputFormat?: string
     name?: string
 }
@@ -107,7 +121,7 @@ export const MUIDateTimePicker: React.FC<IFieldProps & { fieldProps?: IMUIDateTi
     const value = get(formikProps, `values.${fieldProps.name}`);
     //const [selectedDate, setSelectedDate] = React.useState<MaterialUiPickersDate | null>(initValue ? initValue : null);
     const fieldError = get(formikProps, `errors.${fieldProps.name}`);
-    const { outputFormat, ...datePickerProps } = fieldProps;
+    const { outputFormat, 'data-testid': dtTestId, ...datePickerProps } = fieldProps;
     const defaultFormat = 'MM/DD/YYYY HH:mmA'
     const handleDateChange = (datetime: any | null) => {
         //setSelectedDate(date);
@@ -123,8 +137,8 @@ export const MUIDateTimePicker: React.FC<IFieldProps & { fieldProps?: IMUIDateTi
         error: !!fieldError,
         helperText: (fieldError || ''),
         onChange: handleDateChange,
-        value: (!value) ? null : value,
-        inputValue: (!value) ? '' : value,
+        value: (!value) ? null : (typeof value === 'string') ? dayjs(value) : value,
+        inputValue: (!value) ? '' : (typeof value === 'string') ? dayjs(value) : value,
         format: fieldProps.format || defaultFormat,
 
         onError: (error: React.ReactNode) => {
@@ -139,6 +153,11 @@ export const MUIDateTimePicker: React.FC<IFieldProps & { fieldProps?: IMUIDateTi
     set(updatedProps, 'slotProps.textField.name', fieldProps.name)
     set(updatedProps, 'slotProps.textField.helperText', fieldError || '')
     set(updatedProps, 'slotProps.textField.onBlur', formikProps.handleBlur)
+    if (dtTestId) {
+        set(updatedProps, 'slotProps.textField.data-testid', dtTestId)
+    } else if (fieldProps.name) {
+        set(updatedProps, 'slotProps.textField.data-testid', 'datetimepicker-' + fieldProps.name)
+    }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>

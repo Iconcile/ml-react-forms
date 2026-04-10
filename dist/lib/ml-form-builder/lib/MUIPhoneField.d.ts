@@ -2,6 +2,7 @@ import { BoxProps, FormControlProps, SelectProps, TextFieldProps } from "@mui/ma
 import { FC } from "react";
 import { IFieldProps } from "..";
 export interface IMUIPhoneFieldProps {
+    'data-testid'?: string;
     name?: string;
     countryCodeProps?: SelectProps;
     countryCodeLabel?: string;

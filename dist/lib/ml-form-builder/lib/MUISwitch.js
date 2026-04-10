@@ -25,10 +25,10 @@ import { Switch, FormControlLabel } from '@mui/material';
 import { get } from 'lodash';
 export var MUISwitch = function (props) {
     var _a = props.formikProps, formikProps = _a === void 0 ? {} : _a, _b = props.fieldProps, fieldProps = _b === void 0 ? {} : _b, _c = props.isReadOnly, isReadOnly = _c === void 0 ? false : _c;
-    var label = fieldProps.label, switchProps = __rest(fieldProps, ["label"]);
+    var swTestId = fieldProps["data-testid"], label = fieldProps.label, switchProps = __rest(fieldProps, ['data-testid', "label"]);
     var value = get(formikProps, "values.".concat(fieldProps.name));
     var handleOnChange = function () {
         formikProps.setFieldValue(fieldProps.name, !value);
     };
-    return (React.createElement(FormControlLabel, { control: React.createElement(Switch, __assign({ checked: !!value, onChange: handleOnChange, onBlur: formikProps.handleBlur, inputProps: { 'aria-label': 'secondary checkbox' }, value: value }, __assign(__assign({}, switchProps), { disabled: (switchProps.disabled || isReadOnly) }))), label: label || '' }));
+    return (React.createElement(FormControlLabel, { control: React.createElement(Switch, __assign({ checked: !!value, onChange: handleOnChange, onBlur: formikProps.handleBlur, inputProps: { 'aria-label': 'secondary checkbox' }, value: value }, __assign(__assign({}, switchProps), { disabled: (switchProps.disabled || isReadOnly) }), { "data-testid": swTestId || "switch-".concat(fieldProps.name) })), label: label || '' }));
 };

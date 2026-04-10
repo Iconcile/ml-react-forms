@@ -78,7 +78,7 @@ var SearchField = function (props) {
             label: textFieldProps.label || 'Search Places',
             className: 'location-search-input',
             onBlur: formikProps.handleBlur
-        }), updatedProps))));
+        }), updatedProps, { "data-testid": fieldProps['data-testid'] || "place-suggest-".concat(fieldProps.name) }))));
 };
 var LIST_CONTAINER_STYLES = { position: 'absolute', left: 0, top: '100%', right: 0, zIndex: 500 };
 var PlaceList = function (props) {
@@ -101,8 +101,9 @@ var PlaceList = function (props) {
 };
 var FieldLayout = function (props) {
     var currentAddress = props.currentAddress, selectedValue = props.selectedValue, placeAutocompleteProps = props.placeAutocompleteProps, name = props.name, id = props.id, textFieldProps = props.textFieldProps;
+    var testId = props['data-testid'];
     return (React.createElement("div", null,
-        React.createElement(SearchField, { resetField: props.resetField, address: currentAddress, value: selectedValue, placeAutocompleteProps: placeAutocompleteProps, formikProps: props.formikProps, fieldProps: { name: name, id: id, textFieldProps: textFieldProps } }),
+        React.createElement(SearchField, { resetField: props.resetField, address: currentAddress, value: selectedValue, placeAutocompleteProps: placeAutocompleteProps, formikProps: props.formikProps, fieldProps: { 'data-testid': testId, name: name, id: id, textFieldProps: textFieldProps } }),
         React.createElement(PlaceList, { placeAutocompleteProps: placeAutocompleteProps, listContainerStyle: props.listContainerStyle })));
 };
 export var MUIPlaceSuggest = function (props) {

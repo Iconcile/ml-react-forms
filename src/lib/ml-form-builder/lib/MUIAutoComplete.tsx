@@ -24,6 +24,7 @@ export interface TQueries<T> {
     options?: T[]
 }
 export interface IMUIAutoCompleteProps<T> extends Partial<AutocompleteProps<T, boolean, boolean, boolean>> {
+    'data-testid'?: string
     options?: T[]
     renderInputProps?: AutocompleteRenderInputParams
     inputProps?: InputBaseComponentProps
@@ -46,6 +47,7 @@ export const MUIAutocomplete = React.memo(function MUIAutocomplete<T>(props: IPr
     const fieldError = getFieldError((fieldConfig.valueKey || ''), formikProps);
     const error = !!fieldError;
     const {
+        'data-testid': dataTestId,
         highlighterProps = {
             highlightText: false,
             highlightColor: '#ffff00'
@@ -218,6 +220,7 @@ export const MUIAutocomplete = React.memo(function MUIAutocomplete<T>(props: IPr
         id={fieldConfig.valueKey}
         disableClearable={clearOnSelect}
         value={transformValues ? transformValues(value) : value}
+        data-testid={dataTestId || `autocomplete-${fieldConfig.valueKey}`}
         renderInput={
             (params:any) => <TextField
                 {...params}
@@ -231,6 +234,7 @@ export const MUIAutocomplete = React.memo(function MUIAutocomplete<T>(props: IPr
                 name={fieldConfig.valueKey}
                 onBlur={formikProps.handleBlur}
                 {...renderInputProps}
+                data-testid={dataTestId ? `${dataTestId}-input` : `autocomplete-${fieldConfig.valueKey}-input`}
                 InputProps={{
                     ...params.InputProps,
                     // @ts-ignore

@@ -40,16 +40,16 @@ export var MUIFieldArray = memo(function (props) {
         onRemove === null || onRemove === void 0 ? void 0 : onRemove(arrayHelpers, index);
     };
     return (React.createElement(FieldArray, { name: fieldProps.name, render: function (arrayHelpers) { return (React.createElement("div", null,
-            (values || []).map(function (value, index) { return (React.createElement(Box, { key: "".concat(fieldProps.name, "-").concat(index), position: 'relative' },
+            (values || []).map(function (value, index) { return (React.createElement(Box, { key: "".concat(fieldProps.name, "-").concat(index), position: 'relative', "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-item-").concat(index) : "field-array-item-".concat(fieldProps.name, "-").concat(index) },
                 React.cloneElement(itemComponentConfig.component, __assign(__assign({ name: fieldProps.name, itemIndex: index, arrayHelpers: arrayHelpers, fieldValue: value, formikProps: formikProps }, itemComponentConfig.props), textFieldProps)),
                 (removeButton) ? removeButton : (React.createElement(IconButton, __assign({ sx: {
                         position: 'absolute',
                         right: 0,
                         top: '50%',
                         transform: 'translate(0,-50%)'
-                    }, size: "small", onClick: function () { return handleRemove(arrayHelpers, index); } }, removeButtonProps),
+                    }, size: "small", onClick: function () { return handleRemove(arrayHelpers, index); } }, removeButtonProps, { "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-remove-").concat(index) : "field-array-remove-".concat(fieldProps.name, "-").concat(index) }),
                     React.createElement(CloseIcon, null))))); }),
-            React.createElement("div", null, (addButton) ? addButton : (React.createElement(Button, __assign({ type: "button", onClick: function () { return arrayHelpers.push(defaultData); } }, addButtonProps), addButtonText))))); } }));
+            React.createElement("div", null, (addButton) ? addButton : (React.createElement(Button, __assign({ type: "button", onClick: function () { return arrayHelpers.push(defaultData); } }, addButtonProps, { "data-testid": fieldProps['data-testid'] || "field-array-add-".concat(fieldProps.name) }), addButtonText))))); } }));
 }, function (p, n) {
     var _a, _b, _c, _d;
     p.fieldProps.id = '1';

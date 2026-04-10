@@ -26,7 +26,7 @@ import { get, map, isString, isEqual } from 'lodash';
 import { getMenuOptions, getFieldError } from '../Utils';
 export var MUISelectField = React.memo(function (props) {
     var _a = props.fieldConfig, fieldConfig = _a === void 0 ? {} : _a, _b = props.formikProps, formikProps = _b === void 0 ? {} : _b, _c = props.fieldProps, fieldProps = _c === void 0 ? {} : _c;
-    var label = fieldProps.label, _d = fieldProps.options, options = _d === void 0 ? [] : _d, emptyItem = fieldProps.emptyItem, helperText = fieldProps.helperText, formControlProps = fieldProps.formControlProps, formHelperTextProps = fieldProps.formHelperTextProps, _e = fieldProps.emptyMenuItemProps, emptyMenuItemProps = _e === void 0 ? {} : _e, _f = fieldProps.menuItemProps, menuItemProps = _f === void 0 ? {} : _f, _g = fieldProps.inputLabelProps, inputLabelProps = _g === void 0 ? {} : _g, _h = fieldProps.hasObjectValue, hasObjectValue = _h === void 0 ? false : _h, selectProps = __rest(fieldProps, ["label", "options", "emptyItem", "helperText", "formControlProps", "formHelperTextProps", "emptyMenuItemProps", "menuItemProps", "inputLabelProps", "hasObjectValue"]);
+    var selTestId = fieldProps["data-testid"], label = fieldProps.label, _d = fieldProps.options, options = _d === void 0 ? [] : _d, emptyItem = fieldProps.emptyItem, helperText = fieldProps.helperText, formControlProps = fieldProps.formControlProps, formHelperTextProps = fieldProps.formHelperTextProps, _e = fieldProps.emptyMenuItemProps, emptyMenuItemProps = _e === void 0 ? {} : _e, _f = fieldProps.menuItemProps, menuItemProps = _f === void 0 ? {} : _f, _g = fieldProps.inputLabelProps, inputLabelProps = _g === void 0 ? {} : _g, _h = fieldProps.hasObjectValue, hasObjectValue = _h === void 0 ? false : _h, selectProps = __rest(fieldProps, ['data-testid', "label", "options", "emptyItem", "helperText", "formControlProps", "formHelperTextProps", "emptyMenuItemProps", "menuItemProps", "inputLabelProps", "hasObjectValue"]);
     var labelId = "".concat(fieldConfig.id, "_label");
     var fieldError = getFieldError((fieldProps.name || ''), formikProps);
     var emptyItemText = (isString(emptyItem) ? emptyItem : 'None');
@@ -45,7 +45,7 @@ export var MUISelectField = React.memo(function (props) {
     return (React.createElement(FormControl, __assign({ error: !!fieldError }, formControlProps),
         label &&
             (React.createElement(InputLabel, __assign({ id: labelId }, inputLabelProps), label)),
-        React.createElement(Select, __assign({ labelId: labelId, id: fieldConfig.id, value: value, onChange: handleChange, onBlur: formikProps.handleBlur, label: label }, selectProps),
+        React.createElement(Select, __assign({ labelId: labelId, id: fieldConfig.id, value: value, onChange: handleChange, onBlur: formikProps.handleBlur, label: label }, selectProps, { "data-testid": selTestId || "select-".concat(fieldProps.name) }),
             (emptyItem) &&
                 (React.createElement(MenuItem, __assign({ value: '' }, emptyMenuItemProps), emptyItemText)),
             // @ts-ignore MenuItem props types have some ambiguity in Mui type Definition

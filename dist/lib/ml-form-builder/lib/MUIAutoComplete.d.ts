@@ -14,6 +14,7 @@ export interface TQueries<T> {
     options?: T[];
 }
 export interface IMUIAutoCompleteProps<T> extends Partial<AutocompleteProps<T, boolean, boolean, boolean>> {
+    'data-testid'?: string;
     options?: T[];
     renderInputProps?: AutocompleteRenderInputParams;
     inputProps?: InputBaseComponentProps;

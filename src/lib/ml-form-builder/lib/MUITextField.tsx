@@ -6,13 +6,17 @@ import { get, isEqual } from 'lodash';
 import { getFieldError } from '../Utils';
 import MUIReadOnly from './MUIReadOnly';
 
+export type IMUITextFieldProps = TextFieldProps & {
+    'data-testid'?: string
+}
+
 export interface IProps extends IFieldProps {
-    fieldProps?: TextFieldProps
+    fieldProps?: IMUITextFieldProps
     onChange?: (event: React.ChangeEvent<any>, formikProps: FormikProps<any>) => void;
 }
 
 export const MUITextField: React.FC<IProps> = React.memo((props) => {
-    const { fieldProps = {} as TextFieldProps, formikProps = {} as FormikProps<any>, isReadOnly = false,onChange } = props;
+    const { fieldProps = {} as IMUITextFieldProps, formikProps = {} as FormikProps<any>, isReadOnly = false,onChange } = props;
     const fieldError = getFieldError((fieldProps.name || ''), formikProps);
     const updatedProps = {
         ...fieldProps,
@@ -30,10 +34,10 @@ export const MUITextField: React.FC<IProps> = React.memo((props) => {
         value: get(formikProps, `values.${fieldProps.name}`) ?? ''
     };
     if (isReadOnly) {
-        return (<MUIReadOnly label={updatedProps.label} value={updatedProps.value} />);
+        return (<MUIReadOnly label={updatedProps.label} value={updatedProps.value} fieldConfig={props.fieldConfig} data-testid={fieldProps['data-testid']} />);
     }
     return (
-        <TextField {...updatedProps} />
+        <TextField {...updatedProps} data-testid={fieldProps['data-testid'] || `text-${fieldProps.name}`} />
     )
 }, (p, n) => {
 

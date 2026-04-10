@@ -36,6 +36,7 @@ export interface PlacesAutocompleteChildrenProps {
     } & SuggestionProps;
 }
 export interface PlaceSuggestProps {
+    'data-testid'?: string;
     name?: string;
     id?: string;
     textFieldProps?: TextFieldProps;

@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 
 interface MUIFileInputProps {
+	'data-testid'?: string
 	disabled?: boolean
 	multiple?: boolean
 	accept?: string
@@ -57,6 +58,7 @@ export const MUIFileInput: React.FC<MUIFileInputProps> = (props: MUIFileInputPro
 			accept={accept}
 			onChange={handleChange}
 			{...inputProps}
+			data-testid={props['data-testid'] || inputProps?.['data-testid'] || `file-input-${inputProps?.name || 'default'}`}
 		/>
 	)
 }
