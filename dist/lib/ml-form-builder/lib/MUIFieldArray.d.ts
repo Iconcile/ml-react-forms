@@ -15,6 +15,10 @@ interface IFieldArrayProps {
     textFieldProps?: TextFieldProps;
     defaultData?: any;
     onRemove?: (arrayHelpers: FieldArrayRenderProps, index: number) => void;
+    virtualized?: boolean;
+    virtualizedHeight?: number;
+    virtualizedItemHeight?: number;
+    virtualizedItemKey?: string | ((item: any) => React.Key);
 }
 export interface IProps extends IFieldProps {
     fieldProps?: IFieldArrayProps;
