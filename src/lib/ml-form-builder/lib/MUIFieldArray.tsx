@@ -5,6 +5,7 @@ import { get, isEqual } from 'lodash';
 import { IconButton, Button, ButtonProps, IconButtonProps, TextFieldProps, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { getComponentConfig } from '../index';
+import VirtualList from 'rc-virtual-list';
 
 interface IFieldArrayProps {
     'data-testid'?: string
@@ -19,6 +20,10 @@ interface IFieldArrayProps {
     textFieldProps?: TextFieldProps
     defaultData?: any
     onRemove?: (arrayHelpers:FieldArrayRenderProps, index: number) => void
+    virtualized?: boolean
+    virtualizedHeight?: number
+    virtualizedItemHeight?: number
+    virtualizedItemKey?: string | ((item: any) => React.Key)
 }
 export interface IProps extends IFieldProps {
     fieldProps?: IFieldArrayProps
@@ -43,8 +48,8 @@ export interface IProps extends IFieldProps {
 
 export const MUIFieldArray: React.FC<IProps> = memo((props) => {
     const { formikProps = {} as FormikValues, fieldProps = {} as IFieldArrayProps } = props;
-    const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove } = fieldProps;
-    const values = get(formikProps, `values.${fieldProps.name}`);
+    const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove, virtualized = false, virtualizedHeight = 720, virtualizedItemHeight = 88, virtualizedItemKey } = fieldProps;
+    const values = get(formikProps, `values.${fieldProps.name}`) || [];
     const itemComponentConfig = getComponentConfig(itemType);
 
     const handleRemove = (arrayHelpers:FieldArrayRenderProps, index: number) => {
@@ -52,27 +57,47 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
         onRemove?.(arrayHelpers, index)
     }
 
+    const getItemKey = (item: any) => {
+        if (typeof virtualizedItemKey === 'function') return virtualizedItemKey(item);
+        if (virtualizedItemKey) return item?.[virtualizedItemKey];
+        return item?.TEMP_ID ?? item?.CONTRACT_SRV_RATE_ID ?? `${fieldProps.name}-${values.indexOf(item)}`;
+    }
+
+    const renderItem = (value: any, index: number, arrayHelpers: FieldArrayRenderProps, style?: React.CSSProperties) => (
+        <Box key={getItemKey(value)} style={style} position={'relative'} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
+            {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
+            {
+                (removeButton) ? removeButton : (
+                    <IconButton sx={{
+                        position: 'absolute',
+                        right: 0,
+                        top: '50%',
+                        transform: 'translate(0,-50%)'
+                    }} size="small" onClick={() => handleRemove(arrayHelpers, index)} {...removeButtonProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-remove-${index}` : `field-array-remove-${fieldProps.name}-${index}`}><CloseIcon /></IconButton>
+                )
+            }
+
+        </Box>
+    )
+
     return (
         <FieldArray name={fieldProps.name}
             render={arrayHelpers => (
                 <div>
                     {
-                        (values || []).map((value: any, index: number) => (
-                            <Box key={`${fieldProps.name}-${index}`} position={'relative'} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
-                                {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
-                                {
-                                    (removeButton) ? removeButton : (
-                                        <IconButton sx={{
-                                            position: 'absolute',
-                                            right: 0,
-                                            top: '50%',
-                                            transform: 'translate(0,-50%)'
-                                        }} size="small" onClick={() => handleRemove(arrayHelpers, index)} {...removeButtonProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-remove-${index}` : `field-array-remove-${fieldProps.name}-${index}`}><CloseIcon /></IconButton>
-                                    )
-                                }
-
-                            </Box>
-                        ))
+                        virtualized ? (
+                            <VirtualList
+                                data={values}
+                                height={virtualizedHeight}
+                                itemHeight={virtualizedItemHeight}
+                                itemKey={getItemKey}
+                                fullHeight={false}
+                            >
+                                {(value: any, index: number, { style }) => renderItem(value, index, arrayHelpers, style)}
+                            </VirtualList>
+                        ) : (
+                            values.map((value: any, index: number) => renderItem(value, index, arrayHelpers))
+                        )
                     }
                     <div>
                         {(addButton) ? addButton : (<Button type="button" onClick={() => arrayHelpers.push(defaultData)} {...addButtonProps} data-testid={fieldProps['data-testid'] || `field-array-add-${fieldProps.name}`}>{addButtonText}</Button>)}
