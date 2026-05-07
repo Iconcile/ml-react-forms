@@ -20,7 +20,6 @@ interface IFieldArrayProps {
     textFieldProps?: TextFieldProps
     defaultData?: any
     onRemove?: (arrayHelpers:FieldArrayRenderProps, index: number) => void
-    verticalSpacing?: number
     virtualized?: boolean
     virtualizedHeight?: number
     virtualizedWidth?: number | string
@@ -28,7 +27,6 @@ interface IFieldArrayProps {
     virtualizedItemKey?: string | ((item: any) => React.Key)
     virtualizedAlwaysShowScrollbar?: boolean
     virtualizedContainerStyle?: React.CSSProperties
-    itemContainerStyle?: React.CSSProperties
 }
 export interface IProps extends IFieldProps {
     fieldProps?: IFieldArrayProps
@@ -53,7 +51,7 @@ export interface IProps extends IFieldProps {
 
 export const MUIFieldArray: React.FC<IProps> = memo((props) => {
     const { formikProps = {} as FormikValues, fieldProps = {} as IFieldArrayProps } = props;
-    const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove, verticalSpacing = 10, virtualized = false, virtualizedHeight = 720, virtualizedWidth = '100%', virtualizedItemHeight = 88, virtualizedItemKey, virtualizedAlwaysShowScrollbar = false, virtualizedContainerStyle, itemContainerStyle } = fieldProps;
+    const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove, virtualized = false, virtualizedHeight = 720, virtualizedWidth = '100%', virtualizedItemHeight = 88, virtualizedItemKey, virtualizedAlwaysShowScrollbar = false, virtualizedContainerStyle } = fieldProps;
     const values = get(formikProps, `values.${fieldProps.name}`) || [];
     const itemComponentConfig = getComponentConfig(itemType);
     const virtualListRef = React.useRef<any>(null);
@@ -94,16 +92,7 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
 
     const renderItem = (value: any, index: number, arrayHelpers: FieldArrayRenderProps, style?: React.CSSProperties) => (
         <Box key={getItemKey(value)} style={style} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
-            <Box
-                position={'relative'}
-                minHeight={virtualized ? virtualizedItemHeight : undefined}
-                paddingRight={removeButton ? undefined : 5}
-                style={{
-                    display: 'flex',
-                    marginBottom: verticalSpacing,
-                    ...itemContainerStyle,
-                }}
-            >
+            <Box position={'relative'} minHeight={virtualized ? virtualizedItemHeight : undefined} paddingRight={removeButton ? undefined : 5}>
                 {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
                 {
                     (removeButton) ? removeButton : (

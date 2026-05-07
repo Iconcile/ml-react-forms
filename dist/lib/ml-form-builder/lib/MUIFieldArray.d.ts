@@ -15,7 +15,6 @@ interface IFieldArrayProps {
     textFieldProps?: TextFieldProps;
     defaultData?: any;
     onRemove?: (arrayHelpers: FieldArrayRenderProps, index: number) => void;
-    verticalSpacing?: number;
     virtualized?: boolean;
     virtualizedHeight?: number;
     virtualizedWidth?: number | string;
@@ -23,7 +22,6 @@ interface IFieldArrayProps {
     virtualizedItemKey?: string | ((item: any) => React.Key);
     virtualizedAlwaysShowScrollbar?: boolean;
     virtualizedContainerStyle?: React.CSSProperties;
-    itemContainerStyle?: React.CSSProperties;
 }
 export interface IProps extends IFieldProps {
     fieldProps?: IFieldArrayProps;
