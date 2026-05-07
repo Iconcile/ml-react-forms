@@ -37,18 +37,24 @@ export var MUIFieldArray = memo(function (props) {
     var values = get(formikProps, "values.".concat(fieldProps.name)) || [];
     var itemComponentConfig = getComponentConfig(itemType);
     var virtualListRef = React.useRef(null);
+    var _l = React.useState(false), showVirtualizedAddButton = _l[0], setShowVirtualizedAddButton = _l[1];
     var addButtonItem = React.useMemo(function () { return ({ __mlFormFieldArrayAddButton: true }); }, []);
-    var virtualizedValues = React.useMemo(function () { return virtualized ? values.concat([addButtonItem]) : values; }, [addButtonItem, values, virtualized]);
+    var virtualizedValues = React.useMemo(function () { return virtualized && showVirtualizedAddButton ? values.concat([addButtonItem]) : values; }, [addButtonItem, showVirtualizedAddButton, values, virtualized]);
     var handleRemove = function (arrayHelpers, index) {
         arrayHelpers.remove(index);
         onRemove === null || onRemove === void 0 ? void 0 : onRemove(arrayHelpers, index);
     };
     var handleAdd = function (arrayHelpers) {
         arrayHelpers.push(defaultData);
+        setShowVirtualizedAddButton(true);
         window.setTimeout(function () {
             var _a, _b;
             (_b = (_a = virtualListRef.current) === null || _a === void 0 ? void 0 : _a.scrollTo) === null || _b === void 0 ? void 0 : _b.call(_a, { index: values.length, align: 'top' });
         });
+    };
+    var handleVisibleChange = function (visibleItems) {
+        var lastItem = values[values.length - 1];
+        setShowVirtualizedAddButton(!!lastItem && visibleItems.includes(lastItem));
     };
     var getItemKey = function (item) {
         var _a, _b;
@@ -77,7 +83,7 @@ export var MUIFieldArray = memo(function (props) {
                 }, size: "small", onClick: function () { return handleRemove(arrayHelpers, index); } }, removeButtonProps, { "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-remove-").concat(index) : "field-array-remove-".concat(fieldProps.name, "-").concat(index) }),
                 React.createElement(CloseIcon, null)))))); };
     return (React.createElement(FieldArray, { name: fieldProps.name, render: function (arrayHelpers) { return (React.createElement("div", null,
-            virtualized ? (React.createElement(VirtualList, { ref: virtualListRef, data: virtualizedValues, height: virtualizedHeight, style: __assign({ width: virtualizedWidth }, virtualizedContainerStyle), itemHeight: virtualizedItemHeight, itemKey: getItemKey, fullHeight: false, styles: virtualizedAlwaysShowScrollbar ? {
+            virtualized ? (React.createElement(VirtualList, { ref: virtualListRef, data: virtualizedValues, height: virtualizedHeight, style: __assign({ width: virtualizedWidth }, virtualizedContainerStyle), itemHeight: virtualizedItemHeight, itemKey: getItemKey, fullHeight: false, onVisibleChange: handleVisibleChange, styles: virtualizedAlwaysShowScrollbar ? {
                     verticalScrollBar: { visibility: 'visible' },
                 } : undefined }, function (value, index, _a) {
                 var style = _a.style;

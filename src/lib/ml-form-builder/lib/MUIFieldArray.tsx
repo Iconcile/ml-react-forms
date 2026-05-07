@@ -55,8 +55,9 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
     const values = get(formikProps, `values.${fieldProps.name}`) || [];
     const itemComponentConfig = getComponentConfig(itemType);
     const virtualListRef = React.useRef<any>(null);
+    const [showVirtualizedAddButton, setShowVirtualizedAddButton] = React.useState(false);
     const addButtonItem = React.useMemo(() => ({ __mlFormFieldArrayAddButton: true }), []);
-    const virtualizedValues = React.useMemo(() => virtualized ? [...values, addButtonItem] : values, [addButtonItem, values, virtualized]);
+    const virtualizedValues = React.useMemo(() => virtualized && showVirtualizedAddButton ? [...values, addButtonItem] : values, [addButtonItem, showVirtualizedAddButton, values, virtualized]);
 
     const handleRemove = (arrayHelpers:FieldArrayRenderProps, index: number) => {
         arrayHelpers.remove(index)
@@ -65,9 +66,15 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
 
     const handleAdd = (arrayHelpers: FieldArrayRenderProps) => {
         arrayHelpers.push(defaultData);
+        setShowVirtualizedAddButton(true);
         window.setTimeout(() => {
             virtualListRef.current?.scrollTo?.({ index: values.length, align: 'top' });
         });
+    }
+
+    const handleVisibleChange = (visibleItems: any[]) => {
+        const lastItem = values[values.length - 1];
+        setShowVirtualizedAddButton(!!lastItem && visibleItems.includes(lastItem));
     }
 
     const getItemKey = (item: any) => {
@@ -120,6 +127,7 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                                 itemHeight={virtualizedItemHeight}
                                 itemKey={getItemKey}
                                 fullHeight={false}
+                                onVisibleChange={handleVisibleChange}
                                 styles={virtualizedAlwaysShowScrollbar ? {
                                     verticalScrollBar: { visibility: 'visible' },
                                 } : undefined}
