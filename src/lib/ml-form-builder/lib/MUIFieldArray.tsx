@@ -54,17 +54,34 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
     const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove, virtualized = false, virtualizedHeight = 720, virtualizedWidth = '100%', virtualizedItemHeight = 88, virtualizedItemKey, virtualizedAlwaysShowScrollbar = false, virtualizedContainerStyle } = fieldProps;
     const values = get(formikProps, `values.${fieldProps.name}`) || [];
     const itemComponentConfig = getComponentConfig(itemType);
+    const virtualListRef = React.useRef<any>(null);
+    const addButtonItem = React.useMemo(() => ({ __mlFormFieldArrayAddButton: true }), []);
+    const virtualizedValues = React.useMemo(() => virtualized ? [...values, addButtonItem] : values, [addButtonItem, values, virtualized]);
 
     const handleRemove = (arrayHelpers:FieldArrayRenderProps, index: number) => {
         arrayHelpers.remove(index)
         onRemove?.(arrayHelpers, index)
     }
 
+    const handleAdd = (arrayHelpers: FieldArrayRenderProps) => {
+        arrayHelpers.push(defaultData);
+        window.setTimeout(() => {
+            virtualListRef.current?.scrollTo?.({ index: values.length, align: 'top' });
+        });
+    }
+
     const getItemKey = (item: any) => {
+        if (item?.__mlFormFieldArrayAddButton) return `${fieldProps.name}-add-button`;
         if (typeof virtualizedItemKey === 'function') return virtualizedItemKey(item);
         if (virtualizedItemKey) return item?.[virtualizedItemKey];
         return item?.TEMP_ID ?? item?.CONTRACT_SRV_RATE_ID ?? `${fieldProps.name}-${values.indexOf(item)}`;
     }
+
+    const renderAddButton = (arrayHelpers: FieldArrayRenderProps, style?: React.CSSProperties) => (
+        <Box key={`${fieldProps.name}-add-button`} style={style} padding={virtualized ? 1 : 0}>
+            {(addButton) ? addButton : (<Button type="button" onClick={() => handleAdd(arrayHelpers)} {...addButtonProps} data-testid={fieldProps['data-testid'] || `field-array-add-${fieldProps.name}`}>{addButtonText}</Button>)}
+        </Box>
+    )
 
     const renderItem = (value: any, index: number, arrayHelpers: FieldArrayRenderProps, style?: React.CSSProperties) => (
         <Box key={getItemKey(value)} style={style} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
@@ -96,7 +113,8 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                     {
                         virtualized ? (
                             <VirtualList
-                                data={values}
+                                ref={virtualListRef}
+                                data={virtualizedValues}
                                 height={virtualizedHeight}
                                 style={{ width: virtualizedWidth, ...virtualizedContainerStyle }}
                                 itemHeight={virtualizedItemHeight}
@@ -106,15 +124,13 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                                     verticalScrollBar: { visibility: 'visible' },
                                 } : undefined}
                             >
-                                {(value: any, index: number, { style }) => renderItem(value, index, arrayHelpers, style)}
+                                {(value: any, index: number, { style }) => value?.__mlFormFieldArrayAddButton ? renderAddButton(arrayHelpers, style) : renderItem(value, index, arrayHelpers, style)}
                             </VirtualList>
                         ) : (
                             values.map((value: any, index: number) => renderItem(value, index, arrayHelpers))
                         )
                     }
-                    <div>
-                        {(addButton) ? addButton : (<Button type="button" onClick={() => arrayHelpers.push(defaultData)} {...addButtonProps} data-testid={fieldProps['data-testid'] || `field-array-add-${fieldProps.name}`}>{addButtonText}</Button>)}
-                    </div>
+                    {!virtualized ? <div>{renderAddButton(arrayHelpers)}</div> : null}
 
                 </div>
 
