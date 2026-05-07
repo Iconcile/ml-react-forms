@@ -33,7 +33,7 @@ import VirtualList from 'rc-virtual-list';
 } */
 export var MUIFieldArray = memo(function (props) {
     var _a = props.formikProps, formikProps = _a === void 0 ? {} : _a, _b = props.fieldProps, fieldProps = _b === void 0 ? {} : _b;
-    var itemType = fieldProps.itemType, _c = fieldProps.addButtonText, addButtonText = _c === void 0 ? 'Add' : _c, addButtonProps = fieldProps.addButtonProps, addButton = fieldProps.addButton, removeButton = fieldProps.removeButton, removeButtonProps = fieldProps.removeButtonProps, _d = fieldProps.textFieldProps, textFieldProps = _d === void 0 ? {} : _d, _e = fieldProps.defaultData, defaultData = _e === void 0 ? {} : _e, onRemove = fieldProps.onRemove, _f = fieldProps.virtualized, virtualized = _f === void 0 ? false : _f, _g = fieldProps.virtualizedHeight, virtualizedHeight = _g === void 0 ? 720 : _g, _h = fieldProps.virtualizedItemHeight, virtualizedItemHeight = _h === void 0 ? 88 : _h, virtualizedItemKey = fieldProps.virtualizedItemKey;
+    var itemType = fieldProps.itemType, _c = fieldProps.addButtonText, addButtonText = _c === void 0 ? 'Add' : _c, addButtonProps = fieldProps.addButtonProps, addButton = fieldProps.addButton, removeButton = fieldProps.removeButton, removeButtonProps = fieldProps.removeButtonProps, _d = fieldProps.textFieldProps, textFieldProps = _d === void 0 ? {} : _d, _e = fieldProps.defaultData, defaultData = _e === void 0 ? {} : _e, onRemove = fieldProps.onRemove, _f = fieldProps.virtualized, virtualized = _f === void 0 ? false : _f, _g = fieldProps.virtualizedHeight, virtualizedHeight = _g === void 0 ? 720 : _g, _h = fieldProps.virtualizedWidth, virtualizedWidth = _h === void 0 ? '100%' : _h, _j = fieldProps.virtualizedItemHeight, virtualizedItemHeight = _j === void 0 ? 88 : _j, virtualizedItemKey = fieldProps.virtualizedItemKey, _k = fieldProps.virtualizedAlwaysShowScrollbar, virtualizedAlwaysShowScrollbar = _k === void 0 ? false : _k, virtualizedContainerStyle = fieldProps.virtualizedContainerStyle;
     var values = get(formikProps, "values.".concat(fieldProps.name)) || [];
     var itemComponentConfig = getComponentConfig(itemType);
     var handleRemove = function (arrayHelpers, index) {
@@ -48,17 +48,25 @@ export var MUIFieldArray = memo(function (props) {
             return item === null || item === void 0 ? void 0 : item[virtualizedItemKey];
         return (_b = (_a = item === null || item === void 0 ? void 0 : item.TEMP_ID) !== null && _a !== void 0 ? _a : item === null || item === void 0 ? void 0 : item.CONTRACT_SRV_RATE_ID) !== null && _b !== void 0 ? _b : "".concat(fieldProps.name, "-").concat(values.indexOf(item));
     };
-    var renderItem = function (value, index, arrayHelpers, style) { return (React.createElement(Box, { key: getItemKey(value), style: style, position: 'relative', "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-item-").concat(index) : "field-array-item-".concat(fieldProps.name, "-").concat(index) },
-        React.cloneElement(itemComponentConfig.component, __assign(__assign({ name: fieldProps.name, itemIndex: index, arrayHelpers: arrayHelpers, fieldValue: value, formikProps: formikProps }, itemComponentConfig.props), textFieldProps)),
-        (removeButton) ? removeButton : (React.createElement(IconButton, __assign({ sx: {
-                position: 'absolute',
-                right: 0,
-                top: '50%',
-                transform: 'translate(0,-50%)'
-            }, size: "small", onClick: function () { return handleRemove(arrayHelpers, index); } }, removeButtonProps, { "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-remove-").concat(index) : "field-array-remove-".concat(fieldProps.name, "-").concat(index) }),
-            React.createElement(CloseIcon, null))))); };
+    var renderItem = function (value, index, arrayHelpers, style) { return (React.createElement(Box, { key: getItemKey(value), style: style, "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-item-").concat(index) : "field-array-item-".concat(fieldProps.name, "-").concat(index) },
+        React.createElement(Box, { position: 'relative', minHeight: virtualized ? virtualizedItemHeight : undefined, paddingRight: removeButton ? undefined : 5 },
+            React.cloneElement(itemComponentConfig.component, __assign(__assign({ name: fieldProps.name, itemIndex: index, arrayHelpers: arrayHelpers, fieldValue: value, formikProps: formikProps }, itemComponentConfig.props), textFieldProps)),
+            (removeButton) ? removeButton : (React.createElement(IconButton, __assign({ sx: {
+                    position: 'absolute',
+                    right: 4,
+                    top: '50%',
+                    transform: 'translate(0,-50%)',
+                    zIndex: 2,
+                    backgroundColor: 'background.paper',
+                    '&:hover': {
+                        backgroundColor: 'action.hover',
+                    },
+                }, size: "small", onClick: function () { return handleRemove(arrayHelpers, index); } }, removeButtonProps, { "data-testid": fieldProps['data-testid'] ? "".concat(fieldProps['data-testid'], "-remove-").concat(index) : "field-array-remove-".concat(fieldProps.name, "-").concat(index) }),
+                React.createElement(CloseIcon, null)))))); };
     return (React.createElement(FieldArray, { name: fieldProps.name, render: function (arrayHelpers) { return (React.createElement("div", null,
-            virtualized ? (React.createElement(VirtualList, { data: values, height: virtualizedHeight, itemHeight: virtualizedItemHeight, itemKey: getItemKey, fullHeight: false }, function (value, index, _a) {
+            virtualized ? (React.createElement(VirtualList, { data: values, height: virtualizedHeight, style: __assign({ width: virtualizedWidth }, virtualizedContainerStyle), itemHeight: virtualizedItemHeight, itemKey: getItemKey, fullHeight: false, styles: virtualizedAlwaysShowScrollbar ? {
+                    verticalScrollBar: { visibility: 'visible' },
+                } : undefined }, function (value, index, _a) {
                 var style = _a.style;
                 return renderItem(value, index, arrayHelpers, style);
             })) : (values.map(function (value, index) { return renderItem(value, index, arrayHelpers); })),

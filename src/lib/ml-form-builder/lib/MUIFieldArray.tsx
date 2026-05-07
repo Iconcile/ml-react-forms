@@ -22,8 +22,11 @@ interface IFieldArrayProps {
     onRemove?: (arrayHelpers:FieldArrayRenderProps, index: number) => void
     virtualized?: boolean
     virtualizedHeight?: number
+    virtualizedWidth?: number | string
     virtualizedItemHeight?: number
     virtualizedItemKey?: string | ((item: any) => React.Key)
+    virtualizedAlwaysShowScrollbar?: boolean
+    virtualizedContainerStyle?: React.CSSProperties
 }
 export interface IProps extends IFieldProps {
     fieldProps?: IFieldArrayProps
@@ -48,7 +51,7 @@ export interface IProps extends IFieldProps {
 
 export const MUIFieldArray: React.FC<IProps> = memo((props) => {
     const { formikProps = {} as FormikValues, fieldProps = {} as IFieldArrayProps } = props;
-    const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove, virtualized = false, virtualizedHeight = 720, virtualizedItemHeight = 88, virtualizedItemKey } = fieldProps;
+    const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove, virtualized = false, virtualizedHeight = 720, virtualizedWidth = '100%', virtualizedItemHeight = 88, virtualizedItemKey, virtualizedAlwaysShowScrollbar = false, virtualizedContainerStyle } = fieldProps;
     const values = get(formikProps, `values.${fieldProps.name}`) || [];
     const itemComponentConfig = getComponentConfig(itemType);
 
@@ -64,19 +67,25 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
     }
 
     const renderItem = (value: any, index: number, arrayHelpers: FieldArrayRenderProps, style?: React.CSSProperties) => (
-        <Box key={getItemKey(value)} style={style} position={'relative'} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
-            {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
-            {
-                (removeButton) ? removeButton : (
-                    <IconButton sx={{
-                        position: 'absolute',
-                        right: 0,
-                        top: '50%',
-                        transform: 'translate(0,-50%)'
-                    }} size="small" onClick={() => handleRemove(arrayHelpers, index)} {...removeButtonProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-remove-${index}` : `field-array-remove-${fieldProps.name}-${index}`}><CloseIcon /></IconButton>
-                )
-            }
-
+        <Box key={getItemKey(value)} style={style} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
+            <Box position={'relative'} minHeight={virtualized ? virtualizedItemHeight : undefined} paddingRight={removeButton ? undefined : 5}>
+                {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
+                {
+                    (removeButton) ? removeButton : (
+                        <IconButton sx={{
+                            position: 'absolute',
+                            right: 4,
+                            top: '50%',
+                            transform: 'translate(0,-50%)',
+                            zIndex: 2,
+                            backgroundColor: 'background.paper',
+                            '&:hover': {
+                                backgroundColor: 'action.hover',
+                            },
+                        }} size="small" onClick={() => handleRemove(arrayHelpers, index)} {...removeButtonProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-remove-${index}` : `field-array-remove-${fieldProps.name}-${index}`}><CloseIcon /></IconButton>
+                    )
+                }
+            </Box>
         </Box>
     )
 
@@ -89,9 +98,13 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                             <VirtualList
                                 data={values}
                                 height={virtualizedHeight}
+                                style={{ width: virtualizedWidth, ...virtualizedContainerStyle }}
                                 itemHeight={virtualizedItemHeight}
                                 itemKey={getItemKey}
                                 fullHeight={false}
+                                styles={virtualizedAlwaysShowScrollbar ? {
+                                    verticalScrollBar: { visibility: 'visible' },
+                                } : undefined}
                             >
                                 {(value: any, index: number, { style }) => renderItem(value, index, arrayHelpers, style)}
                             </VirtualList>
