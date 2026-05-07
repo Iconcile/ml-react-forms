@@ -55,7 +55,7 @@ export var BuildFormRow = function (props) {
     var columnItems = (get(schema, 'columns'));
     var rowSettings = __assign(__assign({}, settings), (get(schema, 'settings') || {}));
     var colItems = (isArray(schema) ? schema : ((isArray(columnItems) ? columnItems : [schema])));
-    var rowStyle = { marginBottom: (rowSettings.verticalSpacing || 10), display: 'flex' };
+    var rowStyle = __assign({ marginBottom: (rowSettings.verticalSpacing !== null && rowSettings.verticalSpacing !== void 0 ? rowSettings.verticalSpacing : 10), display: 'flex' }, rowSettings.rowStyles);
     var doNotHaveMoreElements = function (index) {
         return filter(colItems.slice(index + 1), function (item) {
             var componentConfig = ComponentMapConfig[item.type];
@@ -73,7 +73,7 @@ export var BuildFormRow = function (props) {
         var Component = componentConfig.component;
         if (conditionalProps.hidden === true)
             return null;
-        return (React.createElement("div", { key: "".concat(rowId, "_field_").concat(index), className: item.classNames, style: __assign({ flex: (item.flex || 1), marginRight: horizontalSpacing, paddingLeft: rowSettings.columnHorizontalPadding, paddingRight: rowSettings.columnHorizontalPadding }, item.styles) }, (settings.isReadOnly && item.readOnlyProps && isFunction(item.readOnlyProps.renderer)) ?
+        return (React.createElement("div", { key: "".concat(rowId, "_field_").concat(index), className: item.classNames, style: __assign({ flex: (item.flex !== null && item.flex !== void 0 ? item.flex : 1), marginRight: horizontalSpacing, paddingLeft: rowSettings.columnHorizontalPadding, paddingRight: rowSettings.columnHorizontalPadding }, item.styles) }, (settings.isReadOnly && item.readOnlyProps && isFunction(item.readOnlyProps.renderer)) ?
             (item.readOnlyProps.renderer({ formikProps: formikProps, fieldConfig: item, isReadOnly: settings.isReadOnly })) :
             ((item === null || item === void 0 ? void 0 : item.isFastField) === true ? (React.createElement(FastField, { name: (item.name || item.valueKey) }, function (fastFieldProps) {
                 var mergedFieldProps = __assign(__assign({}, fieldProps), { field: fastFieldProps.field, meta: fastFieldProps.meta, form: fastFieldProps.form });
