@@ -22,8 +22,11 @@ interface IFieldArrayProps {
     onRemove?: (arrayHelpers:FieldArrayRenderProps, index: number) => void
     virtualized?: boolean
     virtualizedHeight?: number
+    virtualizedWidth?: number | string
     virtualizedItemHeight?: number
     virtualizedItemKey?: string | ((item: any) => React.Key)
+    virtualizedAlwaysShowScrollbar?: boolean
+    virtualizedContainerStyle?: React.CSSProperties
 }
 export interface IProps extends IFieldProps {
     fieldProps?: IFieldArrayProps
@@ -48,35 +51,65 @@ export interface IProps extends IFieldProps {
 
 export const MUIFieldArray: React.FC<IProps> = memo((props) => {
     const { formikProps = {} as FormikValues, fieldProps = {} as IFieldArrayProps } = props;
-    const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove, virtualized = false, virtualizedHeight = 720, virtualizedItemHeight = 88, virtualizedItemKey } = fieldProps;
+    const { itemType, addButtonText = 'Add', addButtonProps, addButton, removeButton, removeButtonProps, textFieldProps = {}, defaultData = {}, onRemove, virtualized = false, virtualizedHeight = 720, virtualizedWidth = '100%', virtualizedItemHeight = 88, virtualizedItemKey, virtualizedAlwaysShowScrollbar = false, virtualizedContainerStyle } = fieldProps;
     const values = get(formikProps, `values.${fieldProps.name}`) || [];
     const itemComponentConfig = getComponentConfig(itemType);
+    const virtualListRef = React.useRef<any>(null);
+    const [showVirtualizedAddButton, setShowVirtualizedAddButton] = React.useState(false);
+    const addButtonItem = React.useMemo(() => ({ __mlFormFieldArrayAddButton: true }), []);
+    const virtualizedValues = React.useMemo(() => virtualized && showVirtualizedAddButton ? [...values, addButtonItem] : values, [addButtonItem, showVirtualizedAddButton, values, virtualized]);
 
     const handleRemove = (arrayHelpers:FieldArrayRenderProps, index: number) => {
         arrayHelpers.remove(index)
         onRemove?.(arrayHelpers, index)
     }
 
+    const handleAdd = (arrayHelpers: FieldArrayRenderProps) => {
+        arrayHelpers.push(defaultData);
+        setShowVirtualizedAddButton(true);
+        window.setTimeout(() => {
+            virtualListRef.current?.scrollTo?.({ index: values.length, align: 'top' });
+        });
+    }
+
+    const handleVisibleChange = (visibleItems: any[]) => {
+        const lastItem = values[values.length - 1];
+        setShowVirtualizedAddButton(!!lastItem && visibleItems.includes(lastItem));
+    }
+
     const getItemKey = (item: any) => {
+        if (item?.__mlFormFieldArrayAddButton) return `${fieldProps.name}-add-button`;
         if (typeof virtualizedItemKey === 'function') return virtualizedItemKey(item);
         if (virtualizedItemKey) return item?.[virtualizedItemKey];
         return item?.TEMP_ID ?? item?.CONTRACT_SRV_RATE_ID ?? `${fieldProps.name}-${values.indexOf(item)}`;
     }
 
-    const renderItem = (value: any, index: number, arrayHelpers: FieldArrayRenderProps, style?: React.CSSProperties) => (
-        <Box key={getItemKey(value)} style={style} position={'relative'} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
-            {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
-            {
-                (removeButton) ? removeButton : (
-                    <IconButton sx={{
-                        position: 'absolute',
-                        right: 0,
-                        top: '50%',
-                        transform: 'translate(0,-50%)'
-                    }} size="small" onClick={() => handleRemove(arrayHelpers, index)} {...removeButtonProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-remove-${index}` : `field-array-remove-${fieldProps.name}-${index}`}><CloseIcon /></IconButton>
-                )
-            }
+    const renderAddButton = (arrayHelpers: FieldArrayRenderProps, style?: React.CSSProperties) => (
+        <Box key={`${fieldProps.name}-add-button`} style={style} padding={virtualized ? 1 : 0}>
+            {(addButton) ? addButton : (<Button type="button" onClick={() => handleAdd(arrayHelpers)} {...addButtonProps} data-testid={fieldProps['data-testid'] || `field-array-add-${fieldProps.name}`}>{addButtonText}</Button>)}
+        </Box>
+    )
 
+    const renderItem = (value: any, index: number, arrayHelpers: FieldArrayRenderProps, style?: React.CSSProperties) => (
+        <Box key={getItemKey(value)} style={style} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-item-${index}` : `field-array-item-${fieldProps.name}-${index}`}>
+            <Box position={'relative'} minHeight={virtualized ? virtualizedItemHeight : undefined} paddingRight={removeButton ? undefined : 5}>
+                {React.cloneElement(itemComponentConfig.component, { name: fieldProps.name, itemIndex: index, arrayHelpers, fieldValue: value, formikProps, ...itemComponentConfig.props, ...textFieldProps })}
+                {
+                    (removeButton) ? removeButton : (
+                        <IconButton sx={{
+                            position: 'absolute',
+                            right: 4,
+                            top: '50%',
+                            transform: 'translate(0,-50%)',
+                            zIndex: 2,
+                            backgroundColor: 'background.paper',
+                            '&:hover': {
+                                backgroundColor: 'action.hover',
+                            },
+                        }} size="small" onClick={() => handleRemove(arrayHelpers, index)} {...removeButtonProps} data-testid={fieldProps['data-testid'] ? `${fieldProps['data-testid']}-remove-${index}` : `field-array-remove-${fieldProps.name}-${index}`}><CloseIcon /></IconButton>
+                    )
+                }
+            </Box>
         </Box>
     )
 
@@ -87,21 +120,25 @@ export const MUIFieldArray: React.FC<IProps> = memo((props) => {
                     {
                         virtualized ? (
                             <VirtualList
-                                data={values}
+                                ref={virtualListRef}
+                                data={virtualizedValues}
                                 height={virtualizedHeight}
+                                style={{ width: virtualizedWidth, ...virtualizedContainerStyle }}
                                 itemHeight={virtualizedItemHeight}
                                 itemKey={getItemKey}
                                 fullHeight={false}
+                                onVisibleChange={handleVisibleChange}
+                                styles={virtualizedAlwaysShowScrollbar ? {
+                                    verticalScrollBar: { visibility: 'visible' },
+                                } : undefined}
                             >
-                                {(value: any, index: number, { style }) => renderItem(value, index, arrayHelpers, style)}
+                                {(value: any, index: number, { style }) => value?.__mlFormFieldArrayAddButton ? renderAddButton(arrayHelpers, style) : renderItem(value, index, arrayHelpers, style)}
                             </VirtualList>
                         ) : (
                             values.map((value: any, index: number) => renderItem(value, index, arrayHelpers))
                         )
                     }
-                    <div>
-                        {(addButton) ? addButton : (<Button type="button" onClick={() => arrayHelpers.push(defaultData)} {...addButtonProps} data-testid={fieldProps['data-testid'] || `field-array-add-${fieldProps.name}`}>{addButtonText}</Button>)}
-                    </div>
+                    {!virtualized ? <div>{renderAddButton(arrayHelpers)}</div> : null}
 
                 </div>
 

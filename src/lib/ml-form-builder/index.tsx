@@ -32,6 +32,7 @@ interface RowSettingsProps {
     horizontalSpacing?: number
     verticalSpacing?: number
     columnHorizontalPadding?: number
+    rowStyles?: React.CSSProperties
 }
 export interface BuilderSettingsProps extends RowSettingsProps {
     isReadOnly?: boolean
@@ -113,7 +114,7 @@ export const BuildFormRow: React.FC<FormRowProps> = props => {
     let columnItems = (get(schema, 'columns'));
     let rowSettings = { ...settings, ...(get(schema, 'settings') || {}) } as RowSettingsProps;
     const colItems = (isArray(schema) ? schema : ((isArray(columnItems) ? columnItems : [schema])));
-    const rowStyle = { marginBottom: (rowSettings.verticalSpacing || 10), display: 'flex' };
+    const rowStyle = { marginBottom: (rowSettings.verticalSpacing ?? 10), display: 'flex', ...rowSettings.rowStyles };
 
     const doNotHaveMoreElements = (index: number): boolean => {
         return filter(colItems.slice(index + 1), (item: FormConfig) => {
@@ -140,7 +141,7 @@ export const BuildFormRow: React.FC<FormRowProps> = props => {
                     return (
                         <div key={`${rowId}_field_${index}`} className={item.classNames as string} style={
                             {
-                                flex: (item.flex || 1),
+                                flex: (item.flex ?? 1),
                                 marginRight: horizontalSpacing,
                                 paddingLeft: rowSettings.columnHorizontalPadding,
                                 paddingRight: rowSettings.columnHorizontalPadding,

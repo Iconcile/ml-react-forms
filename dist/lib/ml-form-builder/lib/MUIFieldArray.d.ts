@@ -17,8 +17,11 @@ interface IFieldArrayProps {
     onRemove?: (arrayHelpers: FieldArrayRenderProps, index: number) => void;
     virtualized?: boolean;
     virtualizedHeight?: number;
+    virtualizedWidth?: number | string;
     virtualizedItemHeight?: number;
     virtualizedItemKey?: string | ((item: any) => React.Key);
+    virtualizedAlwaysShowScrollbar?: boolean;
+    virtualizedContainerStyle?: React.CSSProperties;
 }
 export interface IProps extends IFieldProps {
     fieldProps?: IFieldArrayProps;

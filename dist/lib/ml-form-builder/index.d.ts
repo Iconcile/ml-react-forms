@@ -22,6 +22,7 @@ interface RowSettingsProps {
     horizontalSpacing?: number;
     verticalSpacing?: number;
     columnHorizontalPadding?: number;
+    rowStyles?: React.CSSProperties;
 }
 export interface BuilderSettingsProps extends RowSettingsProps {
     isReadOnly?: boolean;
